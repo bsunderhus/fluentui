@@ -42,6 +42,8 @@ import {
   Popper,
   PositioningProps,
   PopperChildrenProps,
+  AutoSize,
+  AUTOSIZES,
 } from '../../utils/positioner';
 import { PopupContent, PopupContentProps } from './PopupContent';
 
@@ -110,7 +112,7 @@ export interface PopupProps
   target?: HTMLElement;
 
   /** Element to be rendered in-place where the popup is defined. */
-  trigger?: React.ReactNode;
+  trigger?: JSX.Element;
 
   /** Whether the trigger should be tabbable */
   tabbableTrigger?: boolean;
@@ -457,7 +459,10 @@ export const Popup: React.FC<PopupProps> &
   };
 
   const dismissOnScroll = (e: TouchEvent | WheelEvent) => {
-    trySetOpen(false, e);
+    // we only need to dismiss if the scroll happens outside the popup
+    if (!popupContentRef.current.contains(e.target as Node)) {
+      trySetOpen(false, e);
+    }
   };
 
   const trySetOpen = (
@@ -638,7 +643,7 @@ Popup.propTypes = {
   tabbableTrigger: PropTypes.bool,
   unstable_disableTether: PropTypes.oneOf([true, false, 'all']),
   unstable_pinned: PropTypes.bool,
-  autoSize: PropTypes.oneOf([true, false, 'height', 'width']),
+  autoSize: PropTypes.oneOf<AutoSize>(AUTOSIZES),
   content: customPropTypes.shorthandAllowingChildren,
   contentRef: customPropTypes.ref,
   trapFocus: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),

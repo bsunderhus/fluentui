@@ -445,7 +445,8 @@ class ComboBoxInternal extends React.Component<IComboBoxInternalProps, IComboBox
         {onRenderLabel({ props: this.props, multiselectAccessibleText }, this._onRenderLabel)}
         {comboBoxWrapper}
         {(persistMenu || isOpen) &&
-          onRenderContainer(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (onRenderContainer as any)(
             {
               ...this.props,
               onRenderList,
@@ -604,7 +605,7 @@ class ComboBoxInternal extends React.Component<IComboBoxInternalProps, IComboBox
           title={title}
           preventValueSelection={!this._hasFocus()}
           placeholder={placeholder}
-          tabIndex={tabIndex}
+          tabIndex={disabled ? -1 : tabIndex}
           {...autofill}
         />
         <IconButton
@@ -702,7 +703,7 @@ class ComboBoxInternal extends React.Component<IComboBoxInternalProps, IComboBox
             : normalizeToString(suggestedDisplayValue);
         } else {
           return indexWithinBounds(currentOptions, index)
-            ? currentOptions[index].text
+            ? getPreviewText(currentOptions[index])
             : normalizeToString(suggestedDisplayValue);
         }
       }
@@ -1217,6 +1218,7 @@ class ComboBoxInternal extends React.Component<IComboBoxInternalProps, IComboBox
     } = props;
 
     const { isOpen } = this.state;
+    const id = this._id;
 
     const comboBoxMenuWidth =
       useComboBoxAsMenuWidth && this._comboBoxWrapper.current
@@ -1249,7 +1251,7 @@ class ComboBoxInternal extends React.Component<IComboBoxInternalProps, IComboBox
       >
         {onRenderUpperContent(this.props, this._onRenderUpperContent)}
         <div className={this._classNames.optionsContainerWrapper} ref={this._comboBoxMenu}>
-          {onRenderList?.({ ...props }, this._onRenderList)}
+          {onRenderList?.({ ...props, id }, this._onRenderList)}
         </div>
         {onRenderLowerContent(this.props, this._onRenderLowerContent)}
       </Callout>

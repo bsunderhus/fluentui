@@ -57,6 +57,11 @@ exports[`UnifiedPeoplePicker renders correctly with no items 1`] = `
             }
       >
         <div
+          aria-live="polite"
+          className=""
+          role="status"
+        />
+        <div
           aria-expanded={false}
           aria-haspopup="listbox"
           className=
@@ -112,6 +117,11 @@ exports[`UnifiedPeoplePicker renders correctly with no items 1`] = `
             onInput={[Function]}
             onKeyDown={[Function]}
             onPaste={[Function]}
+            style={
+              Object {
+                "fontFamily": "inherit",
+              }
+            }
             value=""
           />
         </div>
@@ -184,6 +194,11 @@ exports[`UnifiedPeoplePicker renders correctly with selected and suggested items
               border-color: #c7e0f4;
             }
       >
+        <div
+          aria-live="polite"
+          className=""
+          role="status"
+        />
         <div
           aria-multiselectable="true"
           aria-orientation="horizontal"
@@ -517,7 +532,7 @@ exports[`UnifiedPeoplePicker renders correctly with selected and suggested items
                             ms-Persona-presence
                             {
                               -ms-high-contrast-adjust: none;
-                              background-clip: content-box;
+                              background-clip: border-box;
                               background-color: #6BB700;
                               border-radius: 50%;
                               border: 2px solid #ffffff;
@@ -879,6 +894,11 @@ exports[`UnifiedPeoplePicker renders correctly with selected and suggested items
               onInput={[Function]}
               onKeyDown={[Function]}
               onPaste={[Function]}
+              style={
+                Object {
+                  "fontFamily": "inherit",
+                }
+              }
               value=""
             />
           </div>
