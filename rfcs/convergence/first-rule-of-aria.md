@@ -43,160 +43,25 @@ Some examples of where `<div>`s + ARIA fall down vs. semantic HTML include:
 
 The difficulty replicating the robust nature of HTML with custom scripting and ARIA is why the [First Rule of ARIA](https://w3c.github.io/using-aria/#rule1) is "don't use ARIA".
 
-## Detailed Design or Proposal
+## Detailed Proposal
 
-The proposal is a pattern in favor of using semantic elements as default for every convergence component. This is particularly important for interactive elements like buttons, links, inputs, radios, etc.
+The proposal is a pattern in favor of using semantic elements as a default (with opt-out mechanisms) for convergence components. This is particularly important for interactive elements like buttons, links, inputs, radios, etc.
 
-The specific recommended steps to take are:
+This proposal does not introduce any API, is just a pattern to be followed when creating converged components, and valid to add that in extreme cases, like table, that semantic first approach is simply not viable, than this should be ignored.
 
-- Whenever a semantic HTML element exists that covers the desired semantics and interaction, it should be used if at all possible.
-- Whenever we want to provide options beyond what HTML allows in an interactive widget, we should provide authors an option to use a semantic HTML version (e.g. Dropdown should have an author option to use a `<select>` element, even if we also allow a custom version with a stylable extendable options list).
-- When creating form components, use a `<label for="id">` element instead of `aria-label` or `aria-labelledby`.
-- When creating a component that does not exist in HTML like a tab control, try to make the base interactive controls using semantic HTML elements augmented with ARIA (so `<button role="tab">` instead of `<div role="tab">`) whenever it makes sense to do so.
+Converged components should follow these steps:
 
-For example a table following semantic elements would look like:
+---
 
-```tsx
-<Table>
-  <TableHead>
-    <TableRow>
-      <TableCell colSpan={2}>
-        The table header
-      </TableCell>
-    </TableRow>
-  </TableHead>
-  <TableBody>
-    <TableRow>
-      <TableCell>
-        The table body
-      </TableCell>
-      <TableCell>
-        with two columns
-      </TableCell>
-    </TableRow>
-  </TableBody>
-</Table>
+If is equivalent to native element - `Button`, `Link`, `Select`
 
+- Should use native element by default
+- Should implement [as-props](./as-props.md) to opt-out native element
+- Should limit possible elements to opt-out (e.g: `Button` should opt-out from `button` for `div` and `span`)
+- In case of opting-out element should implement required ARIA event listeners and attributes, such as `role`
+- Provide authors an option to use a semantic HTML version (e.g. Dropdown should have an author option to use a `<select>` element, even if we also allow a custom version with a stylable extendable options list).
 
-// renders to
-
-<table>
-  <thead>
-    <tr>
-      <th colspan="2">The table header</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>The table body</td>
-      <td>with two columns</td>
-    </tr>
-  </tbody>
-</table>
-```
-
-Since table is a common example of virtualization scenarios, where elements, content, headers, etc,. can be added on the go by JS code, the structural behavior provided by semantic elements can be easily compromised. For example in the case where a div is added between `tbody` and `tr` for scrolling purposes.
-
-```tsx
-<Table>
-  <TableHead>
-    <TableRow>
-      <TableCell colSpan={2}>
-        The table header
-      </TableCell>
-    </TableRow>
-  </TableHead>
-  <TableBody>
-    <div>
-      <TableRow>
-        <TableCell>
-          The table body
-        </TableCell>
-        <TableCell>
-          with two columns
-        </TableCell>
-      </TableRow>
-    </div>
-  </TableBody>
-</Table>
-
-<table>
-  <thead>
-    <tr>
-      <th colspan="2">The table header</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- This div breaks the markup, since tbody cannot contain  -->
-    <div>
-      <tr>
-        <td>The table body</td>
-        <td>with two columns</td>
-      </tr>
-    </div>
-  </tbody>
-</table>
-```
-
-The idea of going for semantic first approach is to ensure that in the default cases, where the user of the lib simply doesn't care about edge cases such as `a` element inside of a `button` element, semantic elements will be used ensuring a better overall experience across different environments, and in the edge cases there's an option to dispose the semantic element for something more generic and ARIA.
-
-The example above could easily be converted to ARIA:
-
-```tsx
-// This as="div" is informs all compound components to opt-out of semantic-first approach
-<Table as="div">
-  <TableHead>
-    <TableRow>
-      <TableCell colSpan={2}>
-        The table header
-      </TableCell>
-    </TableRow>
-  </TableHead>
-  <TableBody>
-    <div>
-      <TableRow>
-        <TableCell>
-          The table body
-        </TableCell>
-        <TableCell>
-          with two columns
-        </TableCell>
-      </TableRow>
-    </div>
-  </TableBody>
-</Table>
-
-<div role="table">
-  <div role="rowgroup">
-    <div role="row">
-      <span role="columnheader" aria-colspan="2">The table header</span>
-    </div >
-  </div>
-  <div role="rowgroup">
-    <div>
-      <div role="row">
-        <span role="cell">The table body</span>
-        <span role="cell">with two columns</span>
-      </div>
-    </div>
-  </div>
-</div>
-```
-
-This proposal does not introduce any API, is just a pattern to be followed when creating converged components, and valid to add that in extreme cases, like the table, that semantic first approach is simply not viable, than this should be ignored.
-
-### Explain if not possible to implement
-
-In the case of components that simply cannot follow this pattern a session in the Spec of that component
-should be dedicated to explain why this pattern hasn't being followed, to avoid future attempts of converting the component for the pattern.
-
-### Opting out of 1st rule of ARIA
-
-There're some cases where opting out of 1st rule of ARIA is desired and we should support that to ensure users desired behaviors. In most of the cases opting out can be accomplished through `as` prop. Some more complex use case may require a different approach, like `Dropdown` with `select` element.
-
-#### Examples
-
-##### Button
+##### Button Example
 
 ```tsx
 <Button>This is a Simple Button</Button>
@@ -219,7 +84,14 @@ There're some cases where opting out of 1st rule of ARIA is desired and we shoul
 </div>
 ```
 
-##### Accordion
+---
+
+If isn't equivalent to native elements but can benefit from using native elements in it's implementation - `Accordion`, `Carousel`, `Disclosure`, `MenuButton`, `Menu`, `MenuBar`, `Tabs`
+
+- Should treat internal elements that could follow previous category as such (e.g: `Accordion` has an internal element with role `button`, this element should previous category)
+- Provide authors an option to use a semantic HTML version (e.g. Dropdown should have an author option to use a `<select>` element, even if we also allow a custom version with a stylable extendable options list).
+
+##### Accordion Example
 
 ```tsx
 <Accordion>
@@ -230,9 +102,8 @@ There're some cases where opting out of 1st rule of ARIA is desired and we shoul
 </Accordion>
 
 <Accordion>
-  <AccordionItem>
-    {/*This breaks */}
-    <AccordionHeader button={{as: "button", role: undefined, tabIndex: undefined}}>
+  <AccordionItem as="div">
+    <AccordionHeader button={{as: "div", role: undefined, tabIndex: undefined}}>
       Header <Link to="/somewhere">Link</Link>
     </AccordionHeader>
     <AccordionPanel>Content</AccordionPanel>
@@ -264,17 +135,15 @@ There're some cases where opting out of 1st rule of ARIA is desired and we shoul
 </div>
 ```
 
-### Impact
+---
 
-4 levels of impacts can be observed when implementing this proposal (requiring opting-out in some cases):
+If isn't equivalent to native elements and can detriment from using native elements in it's implementation - `Table`, `List`, `Tree View`, `Tree Grid`, `Grids`
 
-1. Essential - In the case of interactive elements such as button, link, input, etc,. This proposal is essential to ensure problems presented are resolved - `Button`, `Link`, `Select`
+- Should not follow 1st rule of ARIA
+- In the case of components that simply cannot follow this pattern a session in the Spec of that component
+  should be dedicated to explain why this pattern hasn't being followed, to avoid future attempts of converting the component for the pattern.
 
-2. Useful - In cases such as `Accordion` component this proposal is Useful as it complements internal parts of the component. - `Accordion`, `Carousel`, `Disclosure`, `MenuButton`
-
-3. Indifferent - In cases such as `Menu` component, this proposal makes no difference, since internal elements will have it's role replaced anyway - `Menu`, `MenuBar`, `Tabs`
-
-4. Harmful - In cases that involve virtualization this proposal should not be followed. - `Table`, `List`, `Tree View`, `Tree Grid`, `Grids`
+---
 
 ### Pros and Cons
 
