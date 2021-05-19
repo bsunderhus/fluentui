@@ -32,10 +32,9 @@ jobs:
           yarn checkchange
         displayName: check change
 
-      ## Manually call prelint since lage calls lint per package, not per repo
       - script: |
-          yarn prelint
-        displayName: prelint (satisfied, syncpack, lint-files)
+          yarn nx workspace-lint
+        displayName: nx:workspace-lint
 
       - script: |
           if [[ -n "$(targetBranch)" ]]; then
@@ -90,8 +89,9 @@ jobs:
           SourcePath: 'apps/pr-deploy-site/dist'
           storage: $(azureStorage)
 
+      # only run e2e tests when converged storybook is published by scoping to the converged suite package
       - script: |
-          yarn e2e $(sinceArg)
+          yarn e2e $(sinceArg) --scope @fluentui/react-components
         displayName: Cypress E2E tests
 
       - task: GithubPRStatus@0
@@ -152,6 +152,10 @@ jobs:
         inputs:
           filePath: yarn-ci.sh
         displayName: yarn
+
+      - script: |
+          yarn build --to @fluentui/babel-make-styles --verbose --no-cache
+        displayName: build Babel plugin
 
       - script: |
           yarn lage screener --to vr-tests --debug --verbose --no-cache

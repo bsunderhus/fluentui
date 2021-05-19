@@ -50,6 +50,10 @@ gitignore
 *.sh
 *.svg
 *.txt
+*.mdx
+.gitkeep
+*__tmpl__
+*__template__
 
 # template files which actually follow a different language's formatting
 *.hbs
