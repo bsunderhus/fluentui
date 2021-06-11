@@ -90,9 +90,14 @@ export const BaseButtonStyles: ElementStyles = css`
     border: 0;
   }
 
+  .content {
+    pointer-events: none;
+  }
+
   .start,
   .end {
     display: flex;
+    pointer-events: none;
   }
 
   ::slotted(svg) {
@@ -203,7 +208,8 @@ export const AccentButtonStyles = css`
             color: ${SystemColors.HighlightText};
         }
 
-        :host([appearance="accent"]) .control:hover {
+        :host([appearance="accent"]) .control:hover,
+        :host([appearance="accent"]:active) .control:active {
             background: ${SystemColors.HighlightText};
             border-color: ${SystemColors.Highlight};
             color: ${SystemColors.Highlight};
