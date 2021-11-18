@@ -1,0 +1,19 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "strict": true,
+    "declaration": true,
+    "sourceMap": false,
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "esModuleInterop": true,
+    "outDir": "../dist",
+    "rootDir": ".",
+    "module": "CommonJS",
+    "target": "ES2015"
+  },
+  "include": ["./**/*.ts"],
+  "files": ["./schema.json"],
+  "exclude": ["./**/*.test.js", "./**/*.test.ts"]
+}

@@ -1,22 +1,24 @@
-const { default: Ajv } = require('ajv');
-const Babel = require('@babel/core');
+import Ajv from 'ajv';
+import Babel from '@babel/core';
 const fs = require('fs').promises;
-const path = require('path');
+import path from 'path';
 
-const fixtureSchema = require('../schema.json');
+import fixtureSchema from '../schema.json';
 const ajv = new Ajv();
 
-/** @typedef {{ name: string }} FixtureMetadata */
-/** @typedef {{ absolutePath: string, relativePath: string, name: string }} PreparedFixture */
+export interface FixtureMetadata {
+  name: string;
+}
 
+export interface PreparedFixture {
+  absolutePath: string;
+  relativePath: string;
+  name: string;
+}
 /**
  * Prepares a fixture file to be compiled with Webpack, grabs data from a default export and removes it.
- *
- * @param {string} fixture
- *
- * @return {Promise<PreparedFixture>}
  */
-module.exports = async function prepareFixture(fixture) {
+export default async function prepareFixture(fixture: string): Promise<PreparedFixture> {
   const sourceFixturePath = path.resolve(process.cwd(), fixture);
   const sourceFixtureCode = await fs.readFile(sourceFixturePath, 'utf8');
 
@@ -57,14 +59,6 @@ module.exports = async function prepareFixture(fixture) {
     ],
   });
 
-  /**
-   * @param {typeof result} value
-   * @return {value is Required<NonNullable<typeof result>> & {metadata: FixtureMetadata}}
-   */
-  function isTransformedFixtureResultHasMetadata(value) {
-    return Boolean(value && value.metadata && Object.keys(value.metadata).length);
-  }
-
   if (!isTransformedFixtureResultHasMetadata(result)) {
     throw new Error(
       [
@@ -85,4 +79,10 @@ module.exports = async function prepareFixture(fixture) {
 
     name: result.metadata.name,
   };
-};
+}
+
+function isTransformedFixtureResultHasMetadata(
+  value: Babel.BabelFileResult | null,
+): value is Required<NonNullable<Babel.BabelFileResult | null>> & { metadata: FixtureMetadata } {
+  return Boolean(value && value.metadata && Object.keys(value.metadata).length);
+}

@@ -1,25 +1,24 @@
-const chalk = require('chalk');
-const { default: fetch } = require('node-fetch');
+import chalk from 'chalk';
+import fetch from 'node-fetch';
+import { BundleSizeReport, BundleSizeReportEntry } from './collectLocalReport';
 
-const MAX_HTTP_ATTEMPT_COUNT = 5;
-const REPORT_API_ENDPOINT = `https://fluentbundlesize.azurewebsites.net/api/latest`;
+const MAX_HTTP_ATTEMPT_COUNT = 5 as const;
+const REPORT_API_ENDPOINT = `https://fluentbundlesize.azurewebsites.net/api/latest` as const;
 
 /**
  * Grabs data for a branch from Azure Table Storage.
- *
- * @param {string} branch
- * @param {number} attempt
- *
- * @return {Promise<{ commitSHA: string, remoteReport: import("../utils/collectLocalReport").BundleSizeReport}>}
  */
-module.exports = async function getRemoteReport(branch, attempt = 1) {
+export default async function getRemoteReport(
+  branch: string,
+  attempt = 1,
+): Promise<{ commitSHA: string; remoteReport: BundleSizeReport }> {
   try {
     const response = await fetch(`${REPORT_API_ENDPOINT}?branch=${branch}`);
-    /** @type {(import("../utils/collectLocalReport").BundleSizeReportEntry & {commitSHA: string})[]} */
-    const result = await response.json();
+    const result: (BundleSizeReportEntry & {
+      commitSHA: string;
+    })[] = await response.json();
 
-    /** @type {import("../utils/collectLocalReport").BundleSizeReport} */
-    const remoteReport = result.map(entity => {
+    const remoteReport: BundleSizeReport = result.map(entity => {
       const { commitSHA: _, ...rest } = entity;
       return rest;
     });
@@ -41,4 +40,4 @@ module.exports = async function getRemoteReport(branch, attempt = 1) {
 
     return getRemoteReport(branch, attempt + 1);
   }
-};
+}

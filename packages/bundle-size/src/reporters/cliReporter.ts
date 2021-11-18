@@ -1,15 +1,12 @@
-const chalk = require('chalk');
-const Table = require('cli-table3');
+import { red, green, bold, cyan } from 'chalk';
+import Table from 'cli-table3';
+import { DiffByMetric } from '../utils/calculateDiffByMetric';
+import { ComparedReport } from '../utils/compareResultsInReports';
 
-const getChangedEntriesInReport = require('../utils/getChangedEntriesInReport');
-const { formatBytes } = require('../utils/helpers');
+import getChangedEntriesInReport from '../utils/getChangedEntriesInReport';
+import { formatBytes } from '../utils/helpers';
 
-/**
- * @param {number} value
- *
- * @return {string}
- */
-function getDirectionSymbol(value) {
+function getDirectionSymbol(value: number): string {
   if (value < 0) {
     return '↓';
   }
@@ -21,25 +18,17 @@ function getDirectionSymbol(value) {
   return '';
 }
 
-/**
- * @param {import('../utils/calculateDiffByMetric').DiffByMetric} diff
- *
- * @return {string}
- */
-function formatDelta({ delta, percent }) {
+function formatDelta({ delta, percent }: DiffByMetric) {
   if (delta === 0) {
     return '';
   }
 
-  const colorFn = delta > 0 ? chalk.red : chalk.green;
+  const colorFn = delta > 0 ? red : green;
 
   return colorFn(percent + getDirectionSymbol(delta));
 }
 
-/**
- * @param {import('../utils/compareResultsInReports').ComparedReport} report
- */
-module.exports = async function cliReporter(report) {
+export default async function cliReporter(report: ComparedReport) {
   const result = new Table({
     colAligns: ['left', 'right', 'right'],
     head: ['Fixture', 'Before', 'After (minified/GZIP)'],
@@ -48,7 +37,7 @@ module.exports = async function cliReporter(report) {
 
   changedEntries.forEach(entry => {
     const { diff, gzippedSize, minifiedSize, name, packageName } = entry;
-    const fixtureColumn = chalk.bold(packageName) + '\n' + name + (diff.empty ? chalk.cyan(' (new)') : '');
+    const fixtureColumn = bold(packageName) + '\n' + name + (diff.empty ? cyan(' (new)') : '');
 
     const minifiedBefore = diff.empty ? 'N/A' : formatBytes(minifiedSize - diff.minified.delta);
     const gzippedBefore = diff.empty ? 'N/A' : formatBytes(gzippedSize - diff.gzip.delta);
@@ -68,5 +57,5 @@ module.exports = async function cliReporter(report) {
     return;
   }
 
-  console.log(`${chalk.green('[✔]')} No changes found`);
-};
+  console.log(`${green('[✔]')} No changes found`);
+}

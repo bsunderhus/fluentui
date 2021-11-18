@@ -1,27 +1,21 @@
-const chalk = require('chalk');
-const fs = require('fs').promises;
-const path = require('path');
-const prettier = require('prettier');
-const { findPackageRoot } = require('workspace-tools');
+import { blue } from 'chalk';
+import { promises as fs } from 'fs';
+import { resolve, join } from 'path';
+import { format } from 'prettier';
+import { findPackageRoot } from 'workspace-tools';
+import { DiffByMetric } from '../utils/calculateDiffByMetric';
+import { ComparedReport } from '../utils/compareResultsInReports';
 
-const getChangedEntriesInReport = require('../utils/getChangedEntriesInReport');
-const { formatBytes } = require('../utils/helpers');
+import getChangedEntriesInReport from '../utils/getChangedEntriesInReport';
+import { formatBytes } from '../utils/helpers';
 
 const icons = {
   increase: 'IncreaseYellow.svg',
   decrease: 'Decrease.svg',
 };
 
-/**
- * @param {number} value
- *
- * @return {string}
- */
-function getDirectionSymbol(value) {
-  /**
-   * @param {string} iconName
-   */
-  const img = iconName =>
+function getDirectionSymbol(value: number) {
+  const img = (iconName: string) =>
     `<img aria-hidden="true" src="https://microsoft.github.io/sizeAuditor-website/images/icons/${iconName}" />`;
 
   if (value < 0) {
@@ -35,12 +29,7 @@ function getDirectionSymbol(value) {
   return '';
 }
 
-/**
- * @param {import('../utils/calculateDiffByMetric').DiffByMetric} diff
- *
- * @return {string}
- */
-function formatDelta({ delta }) {
+function formatDelta({ delta }: DiffByMetric) {
   if (delta === 0) {
     return '';
   }
@@ -48,12 +37,7 @@ function formatDelta({ delta }) {
   return `\`${formatBytes(delta)}\` ${getDirectionSymbol(delta)}`;
 }
 
-/**
- * @param {import('../utils/compareResultsInReports').ComparedReport} result
- * @param {string} commitSHA
- * @param {boolean} quiet
- */
-module.exports = async function markdownReporter(result, commitSHA, quiet) {
+export default async function markdownReporter(result: ComparedReport, commitSHA: string, quiet: boolean) {
   const packageRoot = findPackageRoot(__dirname);
 
   if (!packageRoot) {
@@ -65,8 +49,8 @@ module.exports = async function markdownReporter(result, commitSHA, quiet) {
     );
   }
 
-  const artifactsDir = path.resolve(packageRoot, 'dist');
-  const artifactsFilename = path.join(artifactsDir, 'bundle-size.md');
+  const artifactsDir = resolve(packageRoot, 'dist');
+  const artifactsFilename = join(artifactsDir, 'bundle-size.md');
 
   const report = [];
 
@@ -126,9 +110,9 @@ module.exports = async function markdownReporter(result, commitSHA, quiet) {
   );
 
   await fs.mkdir(artifactsDir, { recursive: true });
-  await fs.writeFile(artifactsFilename, prettier.format(report.join('\n'), { parser: 'markdown' }));
+  await fs.writeFile(artifactsFilename, format(report.join('\n'), { parser: 'markdown' }));
 
   if (!quiet) {
-    console.log([chalk.blue('[i]'), `A report file was written to ${artifactsFilename}`].join(' '));
+    console.log([blue('[i]'), `A report file was written to ${artifactsFilename}`].join(' '));
   }
-};
+}

@@ -1,30 +1,26 @@
-const { odata, TableClient, TablesSharedKeyCredential, TableTransaction } = require('@azure/data-tables');
-const chalk = require('chalk');
-const { isCI } = require('ci-info');
+import { odata, TableClient, TablesSharedKeyCredential, TableTransaction } from '@azure/data-tables';
+import { red, blue } from 'chalk';
+import { isCI } from 'ci-info';
+import type { CLIArguments } from '../index';
 
-const collectLocalReport = require('../utils/collectLocalReport');
-const { hrToSeconds } = require('../utils/helpers');
+import collectLocalReport, { BundleSizeReportEntry } from '../utils/collectLocalReport';
+import { hrToSeconds } from '../utils/helpers';
 
 const AZURE_STORAGE_ACCOUNT = 'fluentbundlesize';
 const AZURE_STORAGE_TABLE_NAME = 'latest';
 const AZURE_ACCOUNT_KEY = process.env.BUNDLESIZE_ACCOUNT_KEY;
 
-/**
- * @param {import('../utils/collectLocalReport').BundleSizeReportEntry} entry
- * @return {string}
- */
-function createRowKey(entry) {
+function createRowKey(entry: BundleSizeReportEntry) {
   // Azure does not support slashes in "rowKey"
   // https://docs.microsoft.com/archive/blogs/jmstall/azure-storage-naming-rules
   return `${entry.packageName}${entry.path.replace(/\.fixture\.js$/, '').replace(/\//g, '')}`;
 }
 
-/**
- * @param {typeof import('../index') & { branch: string, 'commit-sha': string }} options
- */
-async function uploadReport(options) {
+export type UploadReportOptions = CLIArguments & { branch: string; 'commit-sha': string };
+
+async function uploadReport(options: UploadReportOptions) {
   if (!isCI) {
-    console.log(`${chalk.red('[e]')} This is command can be executed only in CI`);
+    console.log(`${red('[e]')} This is command can be executed only in CI`);
     process.exit(1);
   }
 
@@ -36,16 +32,15 @@ async function uploadReport(options) {
 
   if (!quiet) {
     console.log(
-      [chalk.blue('[i]'), `Local report prepared in ${hrToSeconds(process.hrtime(localReportStartTime))}`].join(' '),
+      [blue('[i]'), `Local report prepared in ${hrToSeconds(process.hrtime(localReportStartTime))}`].join(' '),
     );
   }
 
   if (typeof AZURE_ACCOUNT_KEY === 'undefined') {
     console.log(
-      [
-        chalk.red('[e]'),
-        'process.env.BUNDLESIZE_ACCOUNT_KEY is not defined, please verify Azure Pipelines settings',
-      ].join(' '),
+      [red('[e]'), 'process.env.BUNDLESIZE_ACCOUNT_KEY is not defined, please verify Azure Pipelines settings'].join(
+        ' ',
+      ),
     );
     process.exit(1);
   }
@@ -73,7 +68,7 @@ async function uploadReport(options) {
     const shouldEntryBeDeleted = isEntryPresentInExistingReport === false;
 
     if (shouldEntryBeDeleted) {
-      transaction.deleteEntity(/** @type {string} */ (entity.partitionKey), /** @type {string} */ (entity.rowKey));
+      transaction.deleteEntity(entity.partitionKey as string, entity.rowKey as string);
     }
   }
 
@@ -98,7 +93,7 @@ async function uploadReport(options) {
 
   if (!quiet) {
     console.log(
-      [chalk.blue('[i]'), `A transaction prepared in ${hrToSeconds(process.hrtime(transactionStartTime))}`].join(' '),
+      [blue('[i]'), `A transaction prepared in ${hrToSeconds(process.hrtime(transactionStartTime))}`].join(' '),
     );
   }
 
@@ -107,7 +102,7 @@ async function uploadReport(options) {
 
   if (!quiet) {
     console.log(
-      [chalk.blue('[i]'), `A transaction submitted in ${hrToSeconds(process.hrtime(submissionStartTime))}`].join(' '),
+      [blue('[i]'), `A transaction submitted in ${hrToSeconds(process.hrtime(submissionStartTime))}`].join(' '),
     );
     console.log(`Completed in ${hrToSeconds(process.hrtime(startTime))}`);
   }
@@ -134,4 +129,4 @@ const api = {
   handler: uploadReport,
 };
 
-module.exports = api;
+export default api;

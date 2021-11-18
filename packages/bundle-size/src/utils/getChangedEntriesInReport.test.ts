@@ -1,10 +1,9 @@
-const { emptyDiff } = require('./compareResultsInReports');
-const getChangedEntriesInReport = require('./getChangedEntriesInReport');
+import { ComparedReport, emptyDiff } from './compareResultsInReports';
+import getChangedEntriesInReport from './getChangedEntriesInReport';
 
 describe('getChangedEntriesInReport', () => {
   it('splits entries to changed an unchanged', () => {
-    /** @type {import('../utils/compareResultsInReports').ComparedReport} */
-    const report = [
+    const report: ComparedReport = [
       { packageName: 'abc', name: 'abc-a', path: 'abc-a.js', minifiedSize: 0, gzippedSize: 0, diff: emptyDiff },
       {
         packageName: 'abc',

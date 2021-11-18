@@ -9,8 +9,8 @@ jest.mock('../utils/compareResultsInReports', () => ({ compareResultsInReports }
 jest.mock('../utils/getRemoteReport', () => getRemoteReport);
 
 const sampleReport = require('../../__fixture__/sampleReport');
-const sampleComparedReport = require('../../__fixture__/sampleComparedReport');
-const { handler } = require('./compareReports');
+const sampleComparedReport = require('../../__fixture__/sampleComparedReport').default;
+const { handler } = require('./compareReports').default;
 
 describe('compareReports', () => {
   it('fetches remote report and compares it with a local data', async () => {

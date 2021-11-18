@@ -1,18 +1,17 @@
-const chalk = require('chalk');
-const Table = require('cli-table3');
-const fs = require('fs').promises;
-const del = require('del');
-const glob = require('glob');
-const path = require('path');
+import chalk from 'chalk';
+import Table from 'cli-table3';
+import { promises as fs } from 'fs';
+import del from 'del';
+import glob from 'glob';
+import path from 'path';
+import { CommandModule } from 'yargs';
+import { CLIArguments } from '..';
 
-const buildFixture = require('../utils/buildFixture');
-const { formatBytes, hrToSeconds } = require('../utils/helpers');
-const prepareFixture = require('../utils/prepareFixture');
+import buildFixture from '../utils/buildFixture';
+import { formatBytes, hrToSeconds } from '../utils/helpers';
+import prepareFixture from '../utils/prepareFixture';
 
-/**
- * @param {typeof import('../index')} options
- */
-async function measure(options) {
+async function measure(options: CLIArguments) {
   const { quiet } = options;
 
   const startTime = process.hrtime();
@@ -58,11 +57,10 @@ async function measure(options) {
 
 // ---
 
-/** @type {import('yargs').CommandModule} */
-const api = {
+const api: CommandModule<CLIArguments, CLIArguments> = {
   command: 'measure',
   describe: 'builds bundle size fixtures and generates JSON report',
   handler: measure,
 };
 
-module.exports = api;
+export default api;

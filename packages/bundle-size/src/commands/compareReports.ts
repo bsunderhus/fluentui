@@ -1,16 +1,16 @@
-const chalk = require('chalk');
+import { blue } from 'chalk';
+import { CLIArguments } from '..';
 
-const cliReporter = require('../reporters/cliReporter');
-const markdownReporter = require('../reporters/markdownReporter');
-const collectLocalReport = require('../utils/collectLocalReport');
-const { compareResultsInReports } = require('../utils/compareResultsInReports');
-const getRemoteReport = require('../utils/getRemoteReport');
-const { hrToSeconds } = require('../utils/helpers');
+import cliReporter from '../reporters/cliReporter';
+import markdownReporter from '../reporters/markdownReporter';
+import collectLocalReport from '../utils/collectLocalReport';
+import { compareResultsInReports } from '../utils/compareResultsInReports';
+import getRemoteReport from '../utils/getRemoteReport';
+import { hrToSeconds } from '../utils/helpers';
 
-/**
- * @param {typeof import('../index') & { branch: string, output: 'cli' | 'markdown' }} options
- */
-async function compareReports(options) {
+export type CompareReportsOptions = CLIArguments & { branch: string; output: 'cli' | 'markdown' };
+
+async function compareReports(options: CompareReportsOptions) {
   const { branch, output, quiet } = options;
   const startTime = process.hrtime();
 
@@ -19,7 +19,7 @@ async function compareReports(options) {
 
   if (!quiet) {
     console.log(
-      [chalk.blue('[i]'), `Local report prepared in ${hrToSeconds(process.hrtime(localReportStartTime))}`].join(' '),
+      [blue('[i]'), `Local report prepared in ${hrToSeconds(process.hrtime(localReportStartTime))}`].join(' '),
     );
   }
 
@@ -28,11 +28,11 @@ async function compareReports(options) {
 
   if (!quiet) {
     if (commitSHA === '') {
-      console.log([chalk.blue('[i]'), `Remote report for "${branch}" branch was not found`].join(' '));
+      console.log([blue('[i]'), `Remote report for "${branch}" branch was not found`].join(' '));
     } else {
       console.log(
         [
-          chalk.blue('[i]'),
+          blue('[i]'),
           `Remote report for "${commitSHA}" commit fetched in ${hrToSeconds(process.hrtime(remoteReportStartTime))}`,
         ].join(' '),
       );
@@ -79,4 +79,4 @@ const api = {
   handler: compareReports,
 };
 
-module.exports = api;
+export default api;

@@ -1,15 +1,14 @@
-const { compareResultsInReports } = require('./compareResultsInReports');
+import { BundleSizeReport } from './collectLocalReport';
+import { compareResultsInReports } from './compareResultsInReports';
 
 describe('compareResultsInReports', () => {
   it('compares local and remote reports', () => {
-    /** @type {import("./collectLocalReport").BundleSizeReport} */
-    const localReport = [
+    const localReport: BundleSizeReport = [
       { packageName: 'abc', name: 'abc-a', path: 'abc-b.js', minifiedSize: 10, gzippedSize: 5 },
       { packageName: 'abc', name: 'abc-b', path: 'abc-a.js', minifiedSize: 10, gzippedSize: 5 },
       { packageName: 'xyz', name: 'xyz', path: 'xyz.js', minifiedSize: 10, gzippedSize: 5 },
     ];
-    /** @type {import("./collectLocalReport").BundleSizeReport}  */
-    const remoteReport = [
+    const remoteReport: BundleSizeReport = [
       { packageName: 'abc', name: 'abc-a', path: 'abc-b.js', minifiedSize: 12, gzippedSize: 7 },
       { packageName: 'xyz', name: 'xyz', path: 'xyz.js', minifiedSize: 10, gzippedSize: 5 },
     ];

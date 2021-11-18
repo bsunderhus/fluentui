@@ -1,13 +1,7 @@
-/** @typedef {import('../utils/compareResultsInReports').ComparedReport} ComparedReport */
+import type { ComparedReport } from './compareResultsInReports';
+import sortComparedReport from './sortComparedReport';
 
-const sortComparedReport = require('./sortComparedReport');
-
-/**
- * @param {ComparedReport} report
- *
- * @return {{ changedEntries: ComparedReport, unchangedEntries: ComparedReport }}
- */
-module.exports = function getChangedEntriesInReport(report) {
+export default function getChangedEntriesInReport(report: ComparedReport) {
   const { changedEntries, unchangedEntries } = report.reduce(
     (acc, reportEntry) => {
       if (reportEntry.diff.gzip.delta === 0 && reportEntry.diff.minified.delta === 0) {
@@ -18,11 +12,11 @@ module.exports = function getChangedEntriesInReport(report) {
       acc.changedEntries.push(reportEntry);
       return acc;
     },
-    { changedEntries: /** @type {ComparedReport} */ ([]), unchangedEntries: /** @type {ComparedReport} */ ([]) },
+    { changedEntries: [] as ComparedReport, unchangedEntries: [] as ComparedReport },
   );
 
   return {
     changedEntries: sortComparedReport(changedEntries),
     unchangedEntries: sortComparedReport(unchangedEntries),
   };
-};
+}

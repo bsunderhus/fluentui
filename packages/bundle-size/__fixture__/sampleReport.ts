@@ -1,5 +1,6 @@
-/** @type {import('../src/utils/collectLocalReport').BundleSizeReport} */
-const sampleReport = [
+import { BundleSizeReport } from '../src/utils/collectLocalReport';
+
+const sampleReport: BundleSizeReport = [
   {
     packageName: 'foo-package',
     name: 'New entry',
@@ -23,4 +24,4 @@ const sampleReport = [
   },
 ];
 
-module.exports = sampleReport;
+export default sampleReport;

@@ -3,8 +3,9 @@ jest.mock('node-fetch', () => ({
   default: fetch,
 }));
 
-const sampleReport = require('../../__fixture__/sampleReport');
-const getRemoteReport = require('./getRemoteReport');
+import { Response } from 'node-fetch';
+import sampleReport from '../../__fixture__/sampleReport';
+import getRemoteReport from './getRemoteReport';
 
 function noop() {
   /* does nothing */
@@ -16,8 +17,7 @@ describe('getRemoteReport', () => {
   });
 
   it('fetches a remote report', async () => {
-    /** @type {Partial<import('node-fetch').Response>} */
-    const value = {
+    const value: Partial<Response> = {
       json: () => {
         return Promise.resolve(sampleReport);
       },
@@ -31,8 +31,7 @@ describe('getRemoteReport', () => {
   });
 
   it('retries to fetch a report', async () => {
-    /** @type {Partial<import('node-fetch').Response>} */
-    const value = {
+    const value: Partial<Response> = {
       json: () => {
         return Promise.resolve(sampleReport);
       },

@@ -1,22 +1,16 @@
-const chalk = require('chalk');
-const gzipSize = require('gzip-size');
-const fs = require('fs').promises;
-const path = require('path');
-const { minify } = require('terser');
-const webpack = require('webpack');
+import chalk from 'chalk';
+import gzipSize from 'gzip-size';
+import { promises as fs } from 'fs';
+import path from 'path';
+import { minify } from 'terser';
+import webpack from 'webpack';
+import type { Configuration as WebpackConfiguration } from 'webpack';
 
-const { hrToSeconds } = require('./helpers');
-const readConfig = require('./readConfig');
+import { hrToSeconds } from './helpers';
+import readConfig from './readConfig';
+import { PreparedFixture } from './prepareFixture';
 
-/** @typedef {import("webpack").Configuration} WebpackConfiguration */
-
-/**
- * @param {string} fixturePath
- * @param {string} outputPath
- *
- * @return {WebpackConfiguration}
- */
-function createWebpackConfig(fixturePath, outputPath) {
+function createWebpackConfig(fixturePath: string, outputPath: string): WebpackConfiguration {
   return {
     name: 'client',
     target: 'web',
@@ -49,12 +43,8 @@ function createWebpackConfig(fixturePath, outputPath) {
   };
 }
 
-/**
- * @param {WebpackConfiguration} webpackConfig
- * @return {Promise<null>}
- */
-function webpackAsync(webpackConfig) {
-  return new Promise((resolve, reject) => {
+function webpackAsync(webpackConfig: WebpackConfiguration) {
+  return new Promise<void>((resolve, reject) => {
     const compiler = webpack(webpackConfig);
 
     compiler.run((err, result) => {
@@ -65,26 +55,26 @@ function webpackAsync(webpackConfig) {
         reject(result.compilation.errors.join('\n'));
       }
 
-      resolve(null);
+      resolve();
     });
   });
 }
 
 // ---
 
-/** @typedef {{ name: string, path: string, minifiedSize: number, gzippedSize: number }} BuildResult */
+export interface BuildResult {
+  name: string;
+  path: string;
+  minifiedSize: number;
+  gzippedSize: number;
+}
 
 /**
  * Builds a fixture with Webpack and then minifies it with Terser. Produces two files as artifacts:
  * - partially minified file (.output.js) for debugging
  * - fully minified file (.min.js)
- *
- * @param {import('./prepareFixture').PreparedFixture} preparedFixture
- * @param {boolean} quiet
- *
- * @return {Promise<BuildResult>}
  */
-module.exports = async function buildFixture(preparedFixture, quiet) {
+export default async function buildFixture(preparedFixture: PreparedFixture, quiet: boolean): Promise<BuildResult> {
   const webpackStartTime = process.hrtime();
 
   const config = await readConfig(quiet);
@@ -151,4 +141,4 @@ module.exports = async function buildFixture(preparedFixture, quiet) {
     minifiedSize,
     gzippedSize,
   };
-};
+}

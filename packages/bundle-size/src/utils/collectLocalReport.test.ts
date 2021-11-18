@@ -1,6 +1,6 @@
-const fs = require('fs').promises;
-const process = require('process');
-const tmp = require('tmp');
+import { promises as fs } from 'fs';
+import process from 'process';
+import { dirSync, fileSync } from 'tmp';
 
 // This mock should be not required 😮
 // glob.sync() call in collectLocalReport.js always returns an empty array on Linux/Windows in tests for an unknown
@@ -12,35 +12,28 @@ jest.mock('glob', () => ({
   ],
 }));
 
-const collectLocalReport = require('./collectLocalReport');
+import collectLocalReport from './collectLocalReport';
 
-/**
- * @return {string}
- */
 function mkPackagesDir() {
-  const projectDir = tmp.dirSync({ prefix: 'collectLocalReport', unsafeCleanup: true });
-  const packagesDir = tmp.dirSync({ dir: projectDir.name, name: 'packages', unsafeCleanup: true });
+  const projectDir = dirSync({ prefix: 'collectLocalReport', unsafeCleanup: true });
+  const packagesDir = dirSync({ dir: projectDir.name, name: 'packages', unsafeCleanup: true });
 
   const spy = jest.spyOn(process, 'cwd');
   spy.mockReturnValue(projectDir.name);
 
   // is required as root directory is determined based on Git project
-  tmp.dirSync({ dir: projectDir.name, name: '.git', unsafeCleanup: true });
+  dirSync({ dir: projectDir.name, name: '.git', unsafeCleanup: true });
 
   return packagesDir.name;
 }
 
-/**
- * @param {string} packagesDir
- * @return {string}
- */
-function mkReportDir(packagesDir) {
-  const distDir = tmp.dirSync({ dir: packagesDir, name: 'dist', unsafeCleanup: true });
-  const bundleSizeDir = tmp.dirSync({ dir: distDir.name, name: 'bundle-size', unsafeCleanup: true });
+function mkReportDir(packagesDir: string) {
+  const distDir = dirSync({ dir: packagesDir, name: 'dist', unsafeCleanup: true });
+  const bundleSizeDir = dirSync({ dir: distDir.name, name: 'bundle-size', unsafeCleanup: true });
 
-  tmp.fileSync({ dir: packagesDir, name: 'package.json' });
+  fileSync({ dir: packagesDir, name: 'package.json' });
 
-  return tmp.fileSync({ dir: bundleSizeDir.name, name: 'bundle-size.json' }).name;
+  return fileSync({ dir: bundleSizeDir.name, name: 'bundle-size.json' }).name;
 }
 
 describe('collectLocalReport', () => {
@@ -51,8 +44,8 @@ describe('collectLocalReport', () => {
   it('aggregates all local reports to a single one', async () => {
     const packagesDir = mkPackagesDir();
 
-    const reportAPath = mkReportDir(tmp.dirSync({ dir: packagesDir, name: 'package-a', unsafeCleanup: true }).name);
-    const reportBPath = mkReportDir(tmp.dirSync({ dir: packagesDir, name: 'package-b', unsafeCleanup: true }).name);
+    const reportAPath = mkReportDir(dirSync({ dir: packagesDir, name: 'package-a', unsafeCleanup: true }).name);
+    const reportBPath = mkReportDir(dirSync({ dir: packagesDir, name: 'package-b', unsafeCleanup: true }).name);
 
     /** @type {import('../utils/buildFixture').BuildResult[]} */
     const reportA = [
@@ -95,8 +88,8 @@ describe('collectLocalReport', () => {
   it('throws an error if a report file contains invalid JSON', async () => {
     const packagesDir = mkPackagesDir();
 
-    const reportAPath = mkReportDir(tmp.dirSync({ dir: packagesDir, name: 'package-a', unsafeCleanup: true }).name);
-    const reportBPath = mkReportDir(tmp.dirSync({ dir: packagesDir, name: 'package-b', unsafeCleanup: true }).name);
+    const reportAPath = mkReportDir(dirSync({ dir: packagesDir, name: 'package-a', unsafeCleanup: true }).name);
+    const reportBPath = mkReportDir(dirSync({ dir: packagesDir, name: 'package-b', unsafeCleanup: true }).name);
 
     /** @type {import('../utils/buildFixture').BuildResult[]} */
     const reportB = [{ name: 'fixtureB', path: 'path/fixtureB.js', minifiedSize: 10, gzippedSize: 5 }];

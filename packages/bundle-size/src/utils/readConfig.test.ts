@@ -1,28 +1,27 @@
-const fs = require('fs').promises;
-const path = require('path');
-const process = require('process');
-const tmp = require('tmp');
+import { promises as fs } from 'fs';
+import { relative } from 'path';
+import process, { env } from 'process';
+import { dirSync, fileSync } from 'tmp';
 
-const readConfig = require('./readConfig');
+import readConfig from './readConfig';
 
 /**
- * @param {string} configContent
- * @param {number} pwdNesting How many folders to nest the pwd
- * @return {Promise<string>} Returns a relative path to a config file
+ * @param pwdNesting How many folders to nest the pwd
+ * @return Returns a relative path to a config file
  */
-async function setup(configContent, pwdNesting = 0) {
-  let packageDir = tmp.dirSync({ prefix: 'test-package', unsafeCleanup: true });
-  const config = tmp.fileSync({ dir: packageDir.name, name: 'bundle-size.config.js' });
+async function setup(configContent: string, pwdNesting = 0) {
+  let packageDir = dirSync({ prefix: 'test-package', unsafeCleanup: true });
+  const config = fileSync({ dir: packageDir.name, name: 'bundle-size.config.js' });
 
   for (let i = 0; i < pwdNesting; i++) {
-    packageDir = tmp.dirSync({ dir: packageDir.name, prefix: 'nested', unsafeCleanup: true });
+    packageDir = dirSync({ dir: packageDir.name, prefix: 'nested', unsafeCleanup: true });
   }
   const spy = jest.spyOn(process, 'cwd');
   spy.mockReturnValue(packageDir.name);
 
   await fs.writeFile(config.name, configContent);
 
-  return path.relative(packageDir.name, config.name);
+  return relative(packageDir.name, config.name);
 }
 
 describe('prepareFixture', () => {
@@ -46,7 +45,7 @@ describe('prepareFixture', () => {
   });
 
   it('should cache config', async () => {
-    process.env.NODE_ENV = 'nottest';
+    env.NODE_ENV = 'nottest';
 
     await setup(`module.exports = { webpack: (config) => config }`);
     const firstConfig = await readConfig();
@@ -56,7 +55,7 @@ describe('prepareFixture', () => {
     expect(firstConfig).toBe(config);
     expect(config.webpack({})).toEqual({});
 
-    process.env.NODE_ENV = 'test';
+    env.NODE_ENV = 'test';
   });
 
   it.each([1, 2, 3])('should cache config for %i layers of nesting', async nesting => {

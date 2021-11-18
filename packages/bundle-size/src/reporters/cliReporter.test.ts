@@ -1,7 +1,7 @@
-const stripAnsi = require('strip-ansi');
+import stripAnsi from 'strip-ansi';
 
-const cliReporter = require('./cliReporter');
-const sampleComparedReport = require('../../__fixture__/sampleComparedReport');
+import cliReporter from './cliReporter';
+import sampleComparedReport from '../../__fixture__/sampleComparedReport';
 
 function noop() {
   /* does nothing */

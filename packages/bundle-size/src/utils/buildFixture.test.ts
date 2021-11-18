@@ -1,28 +1,25 @@
-const fs = require('fs').promises;
-const path = require('path');
-const process = require('process');
-const tmp = require('tmp');
+import { promises as fs } from 'fs';
+import { relative } from 'path';
+import process from 'process';
+import { dirSync, fileSync } from 'tmp';
 
-const buildFixture = require('./buildFixture');
+import buildFixture from './buildFixture';
+import { PreparedFixture } from './prepareFixture';
 
-/**
- * @param {string} fixtureContent
- * @return {Promise<import('./prepareFixture').PreparedFixture>}
- */
-async function setup(fixtureContent) {
-  const packageDir = tmp.dirSync({ prefix: 'buildFixture', unsafeCleanup: true });
+async function setup(fixtureContent: string): Promise<PreparedFixture> {
+  const packageDir = dirSync({ prefix: 'buildFixture', unsafeCleanup: true });
 
   const spy = jest.spyOn(process, 'cwd');
   spy.mockReturnValue(packageDir.name);
 
-  const fixtureDir = tmp.dirSync({ dir: packageDir.name, name: 'bundle-size', unsafeCleanup: true });
-  const fixture = tmp.fileSync({ dir: fixtureDir.name, name: 'test-fixture.js' });
+  const fixtureDir = dirSync({ dir: packageDir.name, name: 'bundle-size', unsafeCleanup: true });
+  const fixture = fileSync({ dir: fixtureDir.name, name: 'test-fixture.js' });
 
   await fs.writeFile(fixture.name, fixtureContent);
 
   return {
     absolutePath: fixture.name,
-    relativePath: path.relative(packageDir.name, fixture.name),
+    relativePath: relative(packageDir.name, fixture.name),
 
     name: 'Test fixture',
   };

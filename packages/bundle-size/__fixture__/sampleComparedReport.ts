@@ -1,7 +1,6 @@
-const { emptyDiff } = require('../src/utils/compareResultsInReports');
+import { ComparedReport, emptyDiff } from '../src/utils/compareResultsInReports';
 
-/** @type {import('../src/utils/compareResultsInReports').ComparedReport} */
-const sampleComparedReport = [
+const sampleComparedReport: ComparedReport = [
   {
     packageName: 'foo-package',
     name: 'New entry',
@@ -38,4 +37,4 @@ const sampleComparedReport = [
   },
 ];
 
-module.exports = sampleComparedReport;
+export default sampleComparedReport;

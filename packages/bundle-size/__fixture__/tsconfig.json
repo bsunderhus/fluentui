@@ -1,0 +1,15 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "allowJs": true,
+    "checkJs": true,
+    "strict": true,
+    "resolveJsonModule": true,
+    "types": ["jest", "node"],
+    "esModuleInterop": true,
+    "noEmit": true
+  },
+  "include": ["../src/**/*.test.ts", "../src/**/*.json", "./*.ts"],
+  "references": [{ "path": "../src" }]
+}

@@ -1,5 +1,5 @@
-const { emptyDiff } = require('./compareResultsInReports');
-const sortComparedReport = require('./sortComparedReport');
+import { emptyDiff } from './compareResultsInReports';
+import sortComparedReport from './sortComparedReport';
 
 describe('sortComparedReport', () => {
   it('sorts a report by "packageName" & "path', () => {

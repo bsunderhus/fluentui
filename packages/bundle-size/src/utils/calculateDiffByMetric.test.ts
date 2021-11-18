@@ -1,17 +1,16 @@
-const calculateDiffByMetric = require('./calculateDiffByMetric');
+import calculateDiffByMetric from './calculateDiffByMetric';
+import { BundleSizeReportEntry } from './collectLocalReport';
 
 describe('calculateDiffByMetric', () => {
   it('calculates difference deltas and percents', () => {
-    /** @type {import("../utils/collectLocalReport").BundleSizeReportEntry} */
-    const remoteEntry = {
+    const remoteEntry: BundleSizeReportEntry = {
       packageName: 'test-package',
       name: 'Test',
       path: 'test.fixture.js',
       minifiedSize: 1000,
       gzippedSize: 100,
     };
-    /** @type {import("../utils/collectLocalReport").BundleSizeReportEntry} */
-    const localEntry = {
+    const localEntry: BundleSizeReportEntry = {
       packageName: 'test-package',
       name: 'Test',
       path: 'test.fixture.js',
@@ -30,16 +29,14 @@ describe('calculateDiffByMetric', () => {
   });
 
   it('handles zero values', () => {
-    /** @type {import("../utils/collectLocalReport").BundleSizeReportEntry} */
-    const remoteEntry = {
+    const remoteEntry: BundleSizeReportEntry = {
       packageName: 'test-package',
       name: 'Test',
       path: 'test.fixture.js',
       minifiedSize: 0,
       gzippedSize: 0,
     };
-    /** @type {import("../utils/collectLocalReport").BundleSizeReportEntry} */
-    const localEntry = {
+    const localEntry: BundleSizeReportEntry = {
       packageName: 'test-package',
       name: 'Test',
       path: 'test.fixture.js',
