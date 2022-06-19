@@ -33,8 +33,15 @@
   },
   "dependencies": {
     "@griffel/react": "^1.2.0",
+<<<<<<< HEAD
     "@fluentui/react-utilities": "^9.0.2",
+=======
+    "@fluentui/keyboard-keys": "9.0.0-rc.6",
+>>>>>>> 7cb7c1da3a (Implements document escape listener)
     "@fluentui/react-context-selector": "9.0.0-rc.10",
+    "@fluentui/react-shared-contexts": "9.0.0-rc.10",
+    "@fluentui/react-tabster": "9.0.0-rc.13",
+    "@fluentui/react-theme": "9.0.0-rc.9",
     "@fluentui/react-portal": "9.0.0-rc.13",
     "tslib": "^2.1.0"
   },
