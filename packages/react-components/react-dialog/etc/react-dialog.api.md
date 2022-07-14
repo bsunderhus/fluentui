@@ -10,21 +10,18 @@ import { ARIAButtonSlotProps } from '@fluentui/react-aria';
 import type { ComponentProps } from '@fluentui/react-utilities';
 import type { ComponentState } from '@fluentui/react-utilities';
 import type { FluentTriggerComponent } from '@fluentui/react-utilities';
-import { ForwardRefComponent } from '@fluentui/react-utilities';
+import type { ForwardRefComponent } from '@fluentui/react-utilities';
 import { JSXElementConstructor } from 'react';
 import * as React_2 from 'react';
 import { ReactElement } from 'react';
 import type { Slot } from '@fluentui/react-utilities';
 import type { SlotClassNames } from '@fluentui/react-utilities';
 
-// @public (undocumented)
-export const Dialog: ForwardRefComponent<DialogProps>;
+// @public
+export const Dialog: React_2.FC<DialogProps>;
 
 // @public
 export const DialogActions: ForwardRefComponent<DialogActionsProps>;
-
-// @public (undocumented)
-export const dialogActionsClassName = "fui-DialogActions";
 
 // @public (undocumented)
 export const dialogActionsClassNames: SlotClassNames<DialogActionsSlots>;
@@ -78,18 +75,20 @@ export type DialogContentSlots = {
 export type DialogContentState = ComponentState<DialogContentSlots>;
 
 // @public (undocumented)
+export type DialogOpenChangeListener = (...args: DialogOpenChangeArgs) => void;
+
+// @public (undocumented)
 export type DialogProps = ComponentProps<Partial<DialogSlots>> & {
     modalType?: DialogModalType;
     open?: boolean;
     defaultOpen?: boolean;
-    onOpenChange?: DialogOnOpenChange;
+    onOpenChange?: DialogOpenChangeListener;
     children: [JSX.Element, JSX.Element] | JSX.Element;
 };
 
 // @public (undocumented)
 export type DialogSlots = {
     overlay?: Slot<'div'>;
-    root: NonNullable<Slot<'div'>>;
 };
 
 // @public (undocumented)
@@ -159,7 +158,7 @@ export const renderDialogTitle_unstable: (state: DialogTitleState) => JSX.Elemen
 export const renderDialogTrigger_unstable: (state: DialogTriggerState) => ReactElement<any, string | JSXElementConstructor<any>> | null;
 
 // @public
-export const useDialog_unstable: (props: DialogProps, ref: React_2.Ref<HTMLElement>) => DialogState;
+export const useDialog_unstable: (props: DialogProps) => DialogState;
 
 // @public
 export const useDialogActions_unstable: (props: DialogActionsProps, ref: React_2.Ref<HTMLElement>) => DialogActionsState;
