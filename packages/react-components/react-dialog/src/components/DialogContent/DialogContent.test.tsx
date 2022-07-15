@@ -2,9 +2,10 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import { DialogContent } from './DialogContent';
 import { isConformant } from '../../common/isConformant';
+import type { DialogContentProps } from './DialogContent.types';
 
 describe('DialogContent', () => {
-  isConformant({
+  isConformant<DialogContentProps>({
     Component: DialogContent,
     displayName: 'DialogContent',
   });

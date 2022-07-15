@@ -2,9 +2,10 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import { DialogTitle } from './DialogTitle';
 import { isConformant } from '../../common/isConformant';
+import type { DialogTitleProps } from './DialogTitle.types';
 
 describe('DialogTitle', () => {
-  isConformant({
+  isConformant<DialogTitleProps>({
     Component: DialogTitle,
     displayName: 'DialogTitle',
   });

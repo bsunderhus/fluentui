@@ -3,36 +3,36 @@ import { DialogTrigger } from './DialogTrigger';
 import * as renderer from 'react-test-renderer';
 import { createEvent, fireEvent, render } from '@testing-library/react';
 import { isConformant } from '../../common/isConformant';
-import { mockUseMenuContext } from '../../common/mockUseMenuContext';
-import { useMenuTriggerContext_unstable } from '../../contexts/menuTriggerContext';
+import { mockUseDialogContext } from '../../common/mockDialogMenuContext';
 import { Enter } from '@fluentui/keyboard-keys';
+import { DialogTriggerProps } from './DialogTrigger.types';
 
-jest.mock('../../contexts/menuContext.ts');
+jest.mock('../../contexts/dialogContext.ts');
 
-describe('MenuTrigger', () => {
-  beforeEach(() => mockUseMenuContext());
+describe('DialogTrigger', () => {
+  beforeEach(() => mockUseDialogContext());
 
-  isConformant({
+  isConformant<DialogTriggerProps>({
     disabledTests: [
-      // MenuTrigger does not render DOM elements
+      // DialogTrigger does not render DOM elements
       'component-handles-ref',
       'component-has-root-ref',
       'component-handles-classname',
       'component-has-static-classname',
       'component-has-static-classnames-object',
       'component-has-static-classname-exported',
-      // MenuTrigger does not have own styles
+      // DialogTrigger does not have own styles
       'make-styles-overrides-win',
     ],
     Component: DialogTrigger,
-    displayName: 'MenuTrigger',
+    displayName: 'DialogTrigger',
     requiredProps: {
-      children: <button>MenuTrigger</button>,
+      children: <button>DialogTrigger</button>,
     },
   });
 
   /**
-   * Note: see more visual regression tests for MenuTrigger in /apps/vr-tests.
+   * Note: see more visual regression tests for DialogTrigger in /apps/vr-tests.
    */
   it('renders a default state', () => {
     const component = renderer.create(
@@ -98,8 +98,8 @@ describe('MenuTrigger', () => {
   });
 
   it('should not open menu when aria-disabled is true', () => {
-    const setOpen = jest.fn();
-    mockUseMenuContext({ setOpen });
+    const requestOpenChange = jest.fn();
+    mockUseDialogContext({ requestOpenChange });
 
     const { getByRole } = render(
       <DialogTrigger>
@@ -108,12 +108,12 @@ describe('MenuTrigger', () => {
     );
     fireEvent.click(getByRole('button'));
 
-    expect(setOpen).toBeCalledTimes(0);
+    expect(requestOpenChange).toBeCalledTimes(0);
   });
 
   it('should open menu when aria-disabled is false', () => {
-    const setOpen = jest.fn();
-    mockUseMenuContext({ setOpen });
+    const requestOpenChange = jest.fn();
+    mockUseDialogContext({ requestOpenChange });
 
     const { getByRole } = render(
       <DialogTrigger>
@@ -122,13 +122,13 @@ describe('MenuTrigger', () => {
     );
     fireEvent.click(getByRole('button'));
 
-    expect(setOpen).toBeCalledTimes(1);
-    expect(setOpen).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ open: true }));
+    expect(requestOpenChange).toBeCalledTimes(1);
+    expect(requestOpenChange).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ open: true }));
   });
 
   it('should open menu when trigger is disabled', () => {
-    const setOpen = jest.fn();
-    mockUseMenuContext({ setOpen });
+    const requestOpenChange = jest.fn();
+    mockUseDialogContext({ requestOpenChange });
 
     const { getByRole } = render(
       <DialogTrigger>
@@ -137,47 +137,7 @@ describe('MenuTrigger', () => {
     );
     fireEvent.click(getByRole('button'));
 
-    expect(setOpen).toBeCalledTimes(0);
-  });
-
-  it('should set MenuTriggerContext to false if not a submenu', () => {
-    mockUseMenuContext({ isSubmenu: false });
-    let contextValue: boolean | undefined;
-    const TestComponent = () => {
-      contextValue = useMenuTriggerContext_unstable();
-
-      return null;
-    };
-
-    render(
-      <DialogTrigger>
-        <button>
-          <TestComponent />
-        </button>
-      </DialogTrigger>,
-    );
-
-    expect(contextValue).toBe(false);
-  });
-
-  it('should set MenuTriggerContext to true if in a submenu', () => {
-    mockUseMenuContext({ isSubmenu: true });
-    let contextValue: boolean | undefined;
-    const TestComponent = () => {
-      contextValue = useMenuTriggerContext_unstable();
-
-      return null;
-    };
-
-    render(
-      <DialogTrigger>
-        <button>
-          <TestComponent />
-        </button>
-      </DialogTrigger>,
-    );
-
-    expect(contextValue).toBe(true);
+    expect(requestOpenChange).toBeCalledTimes(0);
   });
 
   it('should not keyboard click when event is default prevented', () => {

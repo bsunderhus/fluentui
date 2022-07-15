@@ -6,9 +6,8 @@ import { useDialog_unstable } from './useDialog';
 
 describe('useAccordion_unstable', () => {
   it('handle open behavior', () => {
-    const ref = React.createRef<HTMLElement>();
     const { result } = renderHook(() =>
-      useDialog_unstable({ children: [React.createElement('div'), React.createElement('div')] }, ref),
+      useDialog_unstable({ children: [React.createElement('div'), React.createElement('div')] }),
     );
 
     expect(result.current.open).toEqual(false);

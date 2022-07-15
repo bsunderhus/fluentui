@@ -9,9 +9,7 @@ import {
   DialogActions,
 } from '@fluentui/react-dialog';
 import type { DialogProps } from '@fluentui/react-dialog';
-import { Button } from '@fluentui/react-components';
-
-import { makeStyles } from '@griffel/react';
+import { Button, makeStyles } from '@fluentui/react-components';
 
 const useStyles = makeStyles({
   thirdAction: {
