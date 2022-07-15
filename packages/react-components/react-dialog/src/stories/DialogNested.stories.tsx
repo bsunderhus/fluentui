@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogActions } from '@fluentui/react-dialog';
-import type { DialogProps } from '@fluentui/react-dialog';
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogActions, DialogBody } from '@fluentui/react-dialog';
 import { Button } from '@fluentui/react-components';
 
-export const Nested = (props: Partial<DialogProps>) => {
+export const Nested = () => {
   return (
     <>
-      <Dialog {...props}>
+      <Dialog>
         <DialogTrigger>
           <Button>Open dialog</Button>
         </DialogTrigger>
@@ -19,6 +18,7 @@ export const Nested = (props: Partial<DialogProps>) => {
               </DialogTrigger>
               <DialogContent aria-label="label">
                 <DialogTitle>Inner dialog title</DialogTitle>
+                <DialogBody>⚠️ just because you can doesn't mean you should have nested dialogs ⚠️</DialogBody>
                 <DialogActions>
                   <DialogTrigger action="close">
                     <Button appearance="primary">Close</Button>
@@ -31,4 +31,12 @@ export const Nested = (props: Partial<DialogProps>) => {
       </Dialog>
     </>
   );
+};
+
+Nested.parameters = {
+  docs: {
+    description: {
+      story: '',
+    },
+  },
 };

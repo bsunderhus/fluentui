@@ -6,7 +6,7 @@ export type DialogTriggerProps = {
   /**
    * Explicitly declare if the trigger is responsible for opening,
    * closing or toggling a Dialog visibility state.
-   * @default 'toggle'
+   * @default toggle
    */
   action?: DialogTriggerAction;
   /**

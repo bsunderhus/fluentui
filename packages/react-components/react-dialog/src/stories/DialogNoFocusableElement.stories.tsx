@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogBody } from '@fluentui/react-dialog';
-import type { DialogProps } from '@fluentui/react-dialog';
 import { Button } from '@fluentui/react-components';
 
-export const NoFocusableElement = (props: Partial<DialogProps>) => {
+export const NoFocusableElement = () => {
   return (
     <>
-      <Dialog {...props}>
+      <Dialog>
         <DialogTrigger>
           <Button>Open modal dialog</Button>
         </DialogTrigger>
@@ -18,7 +17,7 @@ export const NoFocusableElement = (props: Partial<DialogProps>) => {
           </DialogBody>
         </DialogContent>
       </Dialog>
-      <Dialog modalType="non-modal" {...props}>
+      <Dialog modalType="non-modal">
         <DialogTrigger>
           <Button>Open non-modal dialog</Button>
         </DialogTrigger>
@@ -32,4 +31,12 @@ export const NoFocusableElement = (props: Partial<DialogProps>) => {
       </Dialog>
     </>
   );
+};
+
+NoFocusableElement.parameters = {
+  docs: {
+    description: {
+      story: '',
+    },
+  },
 };

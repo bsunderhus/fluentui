@@ -13,13 +13,9 @@ import type { DialogBodyProps, DialogBodyState } from './DialogBody.types';
  */
 export const useDialogBody_unstable = (props: DialogBodyProps, ref: React.Ref<HTMLElement>): DialogBodyState => {
   return {
-    // TODO add appropriate props/defaults
     components: {
-      // TODO add each slot's element type or component
       root: 'div',
     },
-    // TODO add appropriate slots, for example:
-    // mySlot: resolveShorthand(props.mySlot),
     root: getNativeElementProps('div', {
       ref,
       ...props,

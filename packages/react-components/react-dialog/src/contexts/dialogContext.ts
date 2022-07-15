@@ -1,12 +1,11 @@
 import { createContext, ContextSelector, useContextSelector } from '@fluentui/react-context-selector';
 import type { Context } from '@fluentui/react-context-selector';
-import type { DialogOpenChangeArgs, DialogModalType } from '../Dialog';
+import type { DialogOpenChangeData, DialogModalType } from '../Dialog';
 import * as React from 'react';
 
-export type DialogRequestOpenChangeData = {
-  event: DialogOpenChangeArgs[0];
+export type DialogRequestOpenChangeData = Omit<DialogOpenChangeData, 'open'> & {
   open: React.SetStateAction<boolean>;
-} & Pick<DialogOpenChangeArgs[1], 'type'>;
+};
 
 export type DialogContextValue = {
   /**

@@ -10,13 +10,13 @@ export const renderDialogTitle_unstable = (state: DialogTitleState) => {
   const { slots, slotProps } = getSlots<DialogTitleSlots>(state);
 
   return (
-    <slots.root {...slotProps.root}>
-      {slotProps.root.children}
+    <>
+      <slots.root {...slotProps.root}>{slotProps.root.children}</slots.root>
       {slots.closeButton && (
         <DialogTrigger action="close">
           <slots.closeButton {...slotProps.closeButton} />
         </DialogTrigger>
       )}
-    </slots.root>
+    </>
   );
 };

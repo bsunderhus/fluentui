@@ -4,14 +4,22 @@ export type DialogActionsSlots = {
   root: Slot<'div'>;
 };
 
+export type DialogActionsPosition = 'left' | 'right';
+
 /**
  * DialogActions Props
  */
-export type DialogActionsProps = ComponentProps<DialogActionsSlots> & {};
+export type DialogActionsProps = ComponentProps<DialogActionsSlots> & {
+  /**
+   * defines the position on the dialog grid of the actions
+   * @default 'right'
+   */
+  position?: DialogActionsPosition;
+};
 
 /**
  * State used in rendering DialogActions
  */
-export type DialogActionsState = ComponentState<DialogActionsSlots>;
-// TODO: Remove semicolon from previous line, uncomment next line, and provide union of props to pick from DialogActionsProps.
-// & Required<Pick<DialogActionsProps, 'propName'>>
+export type DialogActionsState = ComponentState<DialogActionsSlots> & {
+  position: DialogActionsPosition;
+};

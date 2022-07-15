@@ -3,7 +3,7 @@ import type { DialogTitleSlots, DialogTitleState } from './DialogTitle.types';
 import type { SlotClassNames } from '@fluentui/react-utilities';
 import { createFocusOutlineStyle } from '@fluentui/react-tabster';
 import { typographyStyles } from '@fluentui/react-theme';
-import { DIALOG_CONTENT_PADDING } from '../../contexts/constants';
+import { gridArea } from '../../utils/localShorthands';
 
 export const dialogTitleClassNames: SlotClassNames<DialogTitleSlots> = {
   root: 'fui-DialogTitle',
@@ -15,22 +15,21 @@ export const dialogTitleClassNames: SlotClassNames<DialogTitleSlots> = {
  */
 const useStyles = makeStyles({
   root: {
-    display: 'flex',
-    alignItems: 'start',
-    columnGap: '8px',
-    justifyContent: 'space-between',
     ...typographyStyles.subtitle1,
+    ...gridArea('title'),
   },
   rootWithoutCloseButton: {
-    ...shorthands.padding(DIALOG_CONTENT_PADDING, DIALOG_CONTENT_PADDING, '8px', DIALOG_CONTENT_PADDING),
+    // ...shorthands.padding(DIALOG_CONTENT_PADDING, DIALOG_CONTENT_PADDING, '8px', DIALOG_CONTENT_PADDING),
   },
   rootWithCloseButton: {
-    ...shorthands.padding(DIALOG_CONTENT_PADDING, '20px', '8px', DIALOG_CONTENT_PADDING),
+    // ...shorthands.padding(DIALOG_CONTENT_PADDING, '20px', '8px', DIALOG_CONTENT_PADDING),
   },
   closeButton: {
     position: 'relative',
     lineHeight: '0',
     cursor: 'pointer',
+    alignSelf: 'start',
+    ...gridArea('close-button'),
   },
   closeButtonFocusIndicator: createFocusOutlineStyle(),
   // TODO: this should be extracted to another package

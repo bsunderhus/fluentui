@@ -1,20 +1,22 @@
 import * as React from 'react';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogBody, DialogActions } from '@fluentui/react-dialog';
 import { Button } from '@fluentui/react-components';
-import story from './DialogAlert.md';
+import story from './DialogControllingOpenAndClose.md';
 
-export const Alert = () => {
+export const ControllingOpenAndClose = () => {
+  const [open, setOpen] = React.useState(false);
   return (
     <>
-      <Dialog modalType="alert">
+      <Dialog open={open} onOpenChange={(event, data) => setOpen(data.open)}>
         <DialogTrigger>
-          <Button>Open Alert dialog</Button>
+          <Button>Open dialog</Button>
         </DialogTrigger>
         <DialogContent aria-label="label">
-          <DialogTitle>Alert dialog title</DialogTitle>
+          <DialogTitle>Dialog title</DialogTitle>
           <DialogBody>
-            This dialog cannot be dismissed by clicking on the overlay nor by pressing Escape. Close button should be
-            pressed to dismiss this Alert
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam exercitationem cumque repellendus eaque
+            est dolor eius expedita nulla ullam? Tenetur reprehenderit aut voluptatum impedit voluptates in natus iure
+            cumque eaque?
           </DialogBody>
           <DialogActions>
             <DialogTrigger>
@@ -28,7 +30,7 @@ export const Alert = () => {
   );
 };
 
-Alert.parameters = {
+ControllingOpenAndClose.parameters = {
   docs: {
     description: {
       story,

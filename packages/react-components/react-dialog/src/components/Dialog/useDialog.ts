@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { resolveShorthand, useControllableState, useEventCallback } from '@fluentui/react-utilities';
-import type { DialogOpenChangeArgs, DialogProps, DialogState, DialogModalType } from './Dialog.types';
+import type { DialogProps, DialogState, DialogModalType, DialogOpenChangeData } from './Dialog.types';
 import { DialogRequestOpenChangeData } from '../../contexts/dialogContext';
 import { useFocusFinders } from '@fluentui/react-tabster';
 import { useFluent_unstable } from '@fluentui/react-shared-contexts';
@@ -38,15 +38,13 @@ export const useDialog_unstable = (props: DialogProps): DialogState => {
     const getNextOpen = normalizeSetStateAction(data.open);
     const isDefaultPrevented = normalizeDefaultPrevented(data.event);
 
-    onOpenChange?.(
-      ...([
-        data.event,
-        {
-          type: data.type,
-          open: getNextOpen(open),
-        },
-      ] as DialogOpenChangeArgs),
-    );
+    if (onOpenChange) {
+      onOpenChange(data.event, {
+        type: data.type,
+        open: getNextOpen(open),
+        event: data.event,
+      } as DialogOpenChangeData);
+    }
 
     // if user prevents default then do not change state value
     if (!isDefaultPrevented()) {
@@ -112,7 +110,7 @@ function childrenToTriggerAndContent(
       return childrenArray as [trigger: React.ReactNode, content: React.ReactNode];
     // case where there's only content
     case 1:
-      return [undefined, childrenArray[1]];
+      return [undefined, childrenArray[0]];
     // unknown case
     default:
       return [undefined, undefined];

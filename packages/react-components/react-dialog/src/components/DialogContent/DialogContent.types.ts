@@ -7,7 +7,13 @@ export type DialogContentSlots = {
 /**
  * DialogContent Props
  */
-export type DialogContentProps = ComponentProps<DialogContentSlots>;
+export type DialogContentProps = ComponentProps<DialogContentSlots> & {
+  /**
+   * Declares if focus will be trapped inside Dialog.
+   * @default modalType !== 'non-modal'
+   */
+  trapFocus?: boolean;
+};
 
 /**
  * State used in rendering DialogContent

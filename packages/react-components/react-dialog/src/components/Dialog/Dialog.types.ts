@@ -12,22 +12,22 @@ export type DialogSlots = {
   overlay?: Slot<'div'>;
 };
 
-export type DialogOpenChangeArgs =
-  | [event: React.KeyboardEvent, data: { type: 'escapeKeyDown'; open: boolean }]
+export type DialogOpenChangeEvent = React.KeyboardEvent | React.MouseEvent | KeyboardEvent;
+
+export type DialogOpenChangeData =
+  | { type: 'escapeKeyDown'; open: boolean; event: React.KeyboardEvent }
   /**
    * document escape keydown defers from internal escape keydown events because of the synthetic event API
    */
-  | [event: KeyboardEvent, data: { type: 'documentEscapeKeyDown'; open: boolean }]
-  | [event: React.MouseEvent, data: { type: 'overlayClick'; open: boolean }]
-  | [event: React.MouseEvent, data: { type: 'triggerClick'; open: boolean }];
+  | { type: 'documentEscapeKeyDown'; open: boolean; event: KeyboardEvent }
+  | { type: 'overlayClick'; open: boolean; event: React.MouseEvent }
+  | { type: 'triggerClick'; open: boolean; event: React.MouseEvent };
 
 export type DialogModalType = 'modal' | 'non-modal' | 'alert';
 
 export type DialogContextValues = {
   dialog: DialogContextValue;
 };
-
-export type DialogOpenChangeListener = (...args: DialogOpenChangeArgs) => void;
 
 export type DialogProps = ComponentProps<Partial<DialogSlots>> & {
   /**
@@ -46,12 +46,12 @@ export type DialogProps = ComponentProps<Partial<DialogSlots>> & {
    * Unlike a typical modal dialog, the user must take an action through the options given to dismiss the dialog,
    * and it cannot be dismissed through the dimmed background or escape key.
    *
-   * @default 'modal'
+   * @default modal
    */
   modalType?: DialogModalType;
   /**
    * Controls the open state of the dialog
-   * @default undefined
+   * @default false
    */
   open?: boolean;
   /**
@@ -61,9 +61,11 @@ export type DialogProps = ComponentProps<Partial<DialogSlots>> & {
   defaultOpen?: boolean;
   /**
    * Callback fired when the component changes value from open state.
-   * @default undefined
+   *
+   * @param event - a React's Synthetic event or a KeyboardEvent in case of `documentEscapeKeyDown`
+   * @param data - A data object with relevant information, such as open value and type
    */
-  onOpenChange?: DialogOpenChangeListener;
+  onOpenChange?: (event: DialogOpenChangeEvent, data: DialogOpenChangeData) => void;
   /**
    * Can contain two children including {@link DialogTrigger} and {@link DialogContent}.
    * Alternatively can only contain {@link DialogContent} if using trigger outside dialog, or controlling state.

@@ -18,15 +18,13 @@ export const useDialogContent_unstable = (
   props: DialogContentProps,
   ref: React.Ref<HTMLElement>,
 ): DialogContentState => {
-  const { as = 'div' } = props;
+  const modalType = useDialogContext_unstable(ctx => ctx.modalType);
+  const { as = 'div', trapFocus = modalType !== 'non-modal' } = props;
 
   const contentRef = useDialogContext_unstable(ctx => ctx.contentRef);
   const requestOpenChange = useDialogContext_unstable(ctx => ctx.requestOpenChange);
-  const modalType = useDialogContext_unstable(ctx => ctx.modalType);
 
-  const { modalAttributes } = useModalAttributes({
-    trapFocus: modalType !== 'non-modal',
-  });
+  const { modalAttributes } = useModalAttributes({ trapFocus });
 
   const handleRootKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
     props.onKeyDown?.(event);

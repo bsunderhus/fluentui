@@ -1,8 +1,8 @@
-import { makeStyles, mergeClasses, shorthands } from '@griffel/react';
+import { makeStyles, mergeClasses } from '@griffel/react';
 import type { DialogBodySlots, DialogBodyState } from './DialogBody.types';
 import type { SlotClassNames } from '@fluentui/react-utilities';
 import { typographyStyles } from '@fluentui/react-theme';
-import { DIALOG_CONTENT_PADDING } from '../../contexts/constants';
+import * as localShorthands from '../../utils/localShorthands';
 
 export const dialogBodyClassName = 'fui-DialogBody';
 export const dialogBodyClassNames: SlotClassNames<DialogBodySlots> = {
@@ -14,14 +14,11 @@ export const dialogBodyClassNames: SlotClassNames<DialogBodySlots> = {
  */
 const useStyles = makeStyles({
   root: {
-    // display: 'flex',
-    // flexDirection: 'row',
-    alignItems: 'start',
     width: '100%',
     height: 'fit-content',
     minHeight: '32px',
     boxSizing: 'border-box',
-    ...shorthands.padding('0', DIALOG_CONTENT_PADDING, '12px'),
+    ...localShorthands.gridArea('body'),
     ...typographyStyles.body1,
   },
 });

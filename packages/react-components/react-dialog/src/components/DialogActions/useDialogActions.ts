@@ -15,17 +15,15 @@ export const useDialogActions_unstable = (
   props: DialogActionsProps,
   ref: React.Ref<HTMLElement>,
 ): DialogActionsState => {
+  const { position = 'right' } = props;
   return {
-    // TODO add appropriate props/defaults
     components: {
-      // TODO add each slot's element type or component
       root: 'div',
     },
-    // TODO add appropriate slots, for example:
-    // mySlot: resolveShorthand(props.mySlot),
     root: getNativeElementProps('div', {
       ref,
       ...props,
     }),
+    position,
   };
 };
