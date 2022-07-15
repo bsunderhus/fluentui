@@ -95,7 +95,7 @@ function childrenToTriggerAndContent(
   children: React.ReactNode,
 ): readonly [trigger: React.ReactNode, content: React.ReactNode] {
   const childrenArray = React.Children.toArray(children) as React.ReactElement[];
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV === 'development') {
     if (childrenArray.length !== 1 && childrenArray.length !== 2) {
       // eslint-disable-next-line no-console
       console.warn(
@@ -157,8 +157,10 @@ function useFocusFirstElement({
           return;
         }
       } else {
-        // eslint-disable-next-line no-console
-        console.warn('A Dialog should have at least one focusable element inside DialogContent');
+        if (process.env.NODE_ENV === 'development') {
+          // eslint-disable-next-line no-console
+          console.warn('A Dialog should have at least one focusable element inside DialogContent');
+        }
       }
 
       if (triggerRef.current && targetDocument) {

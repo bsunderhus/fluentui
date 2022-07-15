@@ -2,6 +2,7 @@ import { useModalAttributes } from '@fluentui/react-tabster';
 import { applyTriggerPropsToChildren, getTriggerChild, useEventCallback } from '@fluentui/react-utilities';
 import * as React from 'react';
 import { useDialogContext_unstable } from '../../contexts/dialogContext';
+import { isTargetDisabled } from '../../utils/isTargetDisabled';
 import {
   DialogTriggerChildProps,
   DialogTriggerProps,
@@ -25,6 +26,9 @@ export const useDialogTrigger_unstable = (props: DialogTriggerProps): DialogTrig
   const { triggerAttributes } = useModalAttributes();
 
   const handleClick = useEventCallback((event: React.MouseEvent<HTMLElement>) => {
+    if (isTargetDisabled(event)) {
+      return;
+    }
     child?.props.onClick?.(event);
     if (!event.isDefaultPrevented()) {
       requestOpenChange({

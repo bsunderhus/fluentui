@@ -16,6 +16,9 @@ describe('Dialog', () => {
       'component-has-static-classname',
       'component-has-static-classnames-object',
       'component-has-static-classname-exported',
+      // TODO:
+      // onOpenChange: A second (data) argument cannot be a union
+      'consistent-callback-args',
       // Menu does not have own styles
       'make-styles-overrides-win',
     ],

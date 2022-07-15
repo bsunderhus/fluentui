@@ -8,6 +8,7 @@ describe('DialogActions', () => {
   isConformant<DialogActionsProps>({
     Component: DialogActions,
     displayName: 'DialogActions',
+    disabledTests: ['component-has-static-classname-exported'],
   });
 
   // TODO add more tests here, and create visual regression tests in /apps/vr-tests

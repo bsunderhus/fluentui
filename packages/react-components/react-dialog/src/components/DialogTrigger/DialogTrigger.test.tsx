@@ -3,7 +3,7 @@ import { DialogTrigger } from './DialogTrigger';
 import * as renderer from 'react-test-renderer';
 import { createEvent, fireEvent, render } from '@testing-library/react';
 import { isConformant } from '../../common/isConformant';
-import { mockUseDialogContext } from '../../common/mockDialogMenuContext';
+import { mockUseDialogContext } from '../../common/mockDialogContext';
 import { Enter } from '@fluentui/keyboard-keys';
 import { DialogTriggerProps } from './DialogTrigger.types';
 
@@ -37,7 +37,7 @@ describe('DialogTrigger', () => {
   it('renders a default state', () => {
     const component = renderer.create(
       <DialogTrigger>
-        <button>Menu trigger</button>
+        <button>Dialog trigger</button>
       </DialogTrigger>,
     );
     const tree = component.toJSON();
@@ -58,8 +58,8 @@ describe('DialogTrigger', () => {
     expect(ref.mock.calls[0]).toMatchInlineSnapshot(`
       Array [
         <button
-          aria-haspopup="menu"
-          id="id"
+          aria-haspopup="dialog"
+          data-tabster="{\\"deloser\\":{}}"
         >
           Trigger
         </button>,
@@ -88,8 +88,8 @@ describe('DialogTrigger', () => {
     expect(cb.mock.calls[0]).toMatchInlineSnapshot(`
       Array [
         <button
-          aria-haspopup="menu"
-          id="id"
+          aria-haspopup="dialog"
+          data-tabster="{\\"deloser\\":{}}"
         >
           Trigger
         </button>,
@@ -97,7 +97,7 @@ describe('DialogTrigger', () => {
     `);
   });
 
-  it('should not open menu when aria-disabled is true', () => {
+  it('should not open dialog when aria-disabled is true', () => {
     const requestOpenChange = jest.fn();
     mockUseDialogContext({ requestOpenChange });
 
@@ -111,22 +111,22 @@ describe('DialogTrigger', () => {
     expect(requestOpenChange).toBeCalledTimes(0);
   });
 
-  it('should open menu when aria-disabled is false', () => {
+  it('should open dialog when aria-disabled is false', () => {
     const requestOpenChange = jest.fn();
     mockUseDialogContext({ requestOpenChange });
 
     const { getByRole } = render(
-      <DialogTrigger>
+      <DialogTrigger action="open">
         <button aria-disabled={false}>trigger</button>
       </DialogTrigger>,
     );
     fireEvent.click(getByRole('button'));
 
     expect(requestOpenChange).toBeCalledTimes(1);
-    expect(requestOpenChange).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ open: true }));
+    expect(requestOpenChange).toHaveBeenCalledWith(expect.objectContaining({ open: true }));
   });
 
-  it('should open menu when trigger is disabled', () => {
+  it('should not open dialog when trigger is disabled', () => {
     const requestOpenChange = jest.fn();
     mockUseDialogContext({ requestOpenChange });
 
