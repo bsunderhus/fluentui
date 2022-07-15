@@ -27,7 +27,9 @@ export const DialogActions: ForwardRefComponent<DialogActionsProps>;
 export const dialogActionsClassNames: SlotClassNames<DialogActionsSlots>;
 
 // @public
-export type DialogActionsProps = ComponentProps<DialogActionsSlots> & {};
+export type DialogActionsProps = ComponentProps<DialogActionsSlots> & {
+    position?: DialogActionsPosition;
+};
 
 // @public (undocumented)
 export type DialogActionsSlots = {
@@ -35,7 +37,9 @@ export type DialogActionsSlots = {
 };
 
 // @public
-export type DialogActionsState = ComponentState<DialogActionsSlots>;
+export type DialogActionsState = ComponentState<DialogActionsSlots> & {
+    position: DialogActionsPosition;
+};
 
 // @public
 export const DialogBody: ForwardRefComponent<DialogBodyProps>;
@@ -64,7 +68,9 @@ export const DialogContent: ForwardRefComponent<DialogContentProps>;
 export const dialogContentClassNames: SlotClassNames<DialogContentSlots>;
 
 // @public
-export type DialogContentProps = ComponentProps<DialogContentSlots>;
+export type DialogContentProps = ComponentProps<DialogContentSlots> & {
+    trapFocus?: boolean;
+};
 
 // @public (undocumented)
 export type DialogContentSlots = {
@@ -75,14 +81,37 @@ export type DialogContentSlots = {
 export type DialogContentState = ComponentState<DialogContentSlots>;
 
 // @public (undocumented)
-export type DialogOpenChangeListener = (...args: DialogOpenChangeArgs) => void;
+export type DialogOpenChangeData = {
+    type: 'escapeKeyDown';
+    open: boolean;
+    event: React_2.KeyboardEvent;
+}
+/**
+* document escape keydown defers from internal escape keydown events because of the synthetic event API
+*/
+| {
+    type: 'documentEscapeKeyDown';
+    open: boolean;
+    event: KeyboardEvent;
+} | {
+    type: 'overlayClick';
+    open: boolean;
+    event: React_2.MouseEvent;
+} | {
+    type: 'triggerClick';
+    open: boolean;
+    event: React_2.MouseEvent;
+};
+
+// @public (undocumented)
+export type DialogOpenChangeEvent = React_2.KeyboardEvent | React_2.MouseEvent | KeyboardEvent;
 
 // @public (undocumented)
 export type DialogProps = ComponentProps<Partial<DialogSlots>> & {
     modalType?: DialogModalType;
     open?: boolean;
     defaultOpen?: boolean;
-    onOpenChange?: DialogOpenChangeListener;
+    onOpenChange?: (event: DialogOpenChangeEvent, data: DialogOpenChangeData) => void;
     children: [JSX.Element, JSX.Element] | JSX.Element;
 };
 
