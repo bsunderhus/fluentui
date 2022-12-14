@@ -6,7 +6,7 @@
 
 /// <reference types="react" />
 
-import type { ARIAButtonElement } from '@fluentui/react-aria';
+import { ARIAButtonElement } from '@fluentui/react-aria';
 import { ARIAButtonResultProps } from '@fluentui/react-aria';
 import type { ARIAButtonSlotProps } from '@fluentui/react-aria';
 import { ARIAButtonType } from '@fluentui/react-aria';

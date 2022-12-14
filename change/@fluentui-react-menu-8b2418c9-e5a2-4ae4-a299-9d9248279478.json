@@ -1,0 +1,7 @@
+{
+  "type": "patch",
+  "comment": "bugfix: ensures state.components.componentName by not assigning as prop internally",
+  "packageName": "@fluentui/react-menu",
+  "email": "bernardo.sunderhus@gmail.com",
+  "dependentChangeType": "patch"
+}
