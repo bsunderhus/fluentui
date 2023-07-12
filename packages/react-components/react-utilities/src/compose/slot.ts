@@ -1,12 +1,11 @@
 import type {
   AsIntrinsicElement,
   SlotComponent,
-  SlotComponentMetadata,
   SlotRenderFunction,
   SlotShorthandValue,
   UnknownSlotProps,
 } from './types';
-import { SLOT_COMPONENT_METADATA_SYMBOL } from './constants';
+import { SLOT_ELEMENT_TYPE_SYMBOL, SLOT_RENDER_FUNCTION_SYMBOL } from './constants';
 import * as React from 'react';
 import { isSlot } from './isSlot';
 
@@ -70,18 +69,10 @@ export function slot<Props extends UnknownSlotProps>(
     return undefined;
   }
 
-  let metadata: SlotComponentMetadata<Props>;
-  if (isSlot<Props>(value)) {
-    metadata = value[SLOT_COMPONENT_METADATA_SYMBOL];
-    if (elementType !== undefined) {
-      metadata.elementType = elementType;
+  if (process.env.NODE_ENV !== 'production') {
+    if (!isSlot(value) && !elementType) {
+      throw new Error("[react-utilities]: slot options.elementType is required when value isn't a slot itself");
     }
-  } else if (elementType !== undefined) {
-    metadata = { elementType };
-  } else if (process.env.NODE_ENV !== 'production') {
-    throw new Error("[react-utilities]: slot options.elementType is required when value isn't a slot itself");
-  } else {
-    metadata = { elementType: 'div' as React.ElementType<Props> as React.ComponentType<Props> };
   }
 
   /**
@@ -92,7 +83,7 @@ export function slot<Props extends UnknownSlotProps>(
    */
   const propsWithMetadata = {
     ...defaultProps,
-    [SLOT_COMPONENT_METADATA_SYMBOL]: metadata,
+    [SLOT_ELEMENT_TYPE_SYMBOL]: elementType,
   } as SlotComponent<Props>;
 
   if (
@@ -106,7 +97,7 @@ export function slot<Props extends UnknownSlotProps>(
   } else if (typeof value === 'object') {
     Object.assign(propsWithMetadata, value);
     if (typeof value.children === 'function') {
-      metadata.renderFunction = value.children as SlotRenderFunction<Props>;
+      propsWithMetadata[SLOT_RENDER_FUNCTION_SYMBOL] = value.children as SlotRenderFunction<Props>;
       propsWithMetadata.children = defaultProps?.children;
     }
   }

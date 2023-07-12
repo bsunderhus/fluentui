@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SLOT_COMPONENT_METADATA_SYMBOL } from './constants';
+import { SLOT_ELEMENT_TYPE_SYMBOL, SLOT_RENDER_FUNCTION_SYMBOL } from './constants';
 
 export type SlotRenderFunction<Props> = (
   Component: React.ElementType<Props>,
@@ -244,19 +244,16 @@ export type SlotComponent<Props extends UnknownSlotProps> = Props & {
    * **NOTE**: Slot components are not callable.
    */
   (props: React.PropsWithChildren<{}>): React.ReactElement | null;
+
   /**
    * @internal
    */
-  [SLOT_COMPONENT_METADATA_SYMBOL]: Readonly<SlotComponentMetadata<Props>>;
-};
-
-/**
- * Metadata stored on a slot component to describe its behavior.
- * This is used to determine how to render the slot.
- */
-export type SlotComponentMetadata<Props extends UnknownSlotProps> = {
-  renderFunction?: SlotRenderFunction<Props>;
-  elementType:
+  [SLOT_ELEMENT_TYPE_SYMBOL]:
     | React.ComponentType<Props>
     | (Props extends AsIntrinsicElement<infer As> ? As : keyof JSX.IntrinsicElements);
+
+  /**
+   * @internal
+   */
+  [SLOT_RENDER_FUNCTION_SYMBOL]?: SlotRenderFunction<Props>;
 };
