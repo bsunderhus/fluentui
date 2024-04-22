@@ -13,6 +13,8 @@ export type DialogSurfaceSlots = {
    */
   backdrop?: Slot<'div'>;
   root: Slot<'div'>;
+
+  backdropMotion: PresenceMotionSlot;
 };
 
 /**

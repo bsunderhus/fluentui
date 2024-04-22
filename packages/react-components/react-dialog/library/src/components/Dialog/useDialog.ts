@@ -1,11 +1,13 @@
-import * as React from 'react';
-import { useControllableState, useEventCallback, useId } from '@fluentui/react-utilities';
 import { useHasParentContext } from '@fluentui/react-context-selector';
+import { useModalAttributes } from '@fluentui/react-tabster';
+import { presenceMotionSlot } from '@fluentui/react-motion';
+import { useControllableState, useEventCallback, useId } from '@fluentui/react-utilities';
+import * as React from 'react';
+
 import { useFocusFirstElement } from '../../utils';
 import { DialogContext } from '../../contexts';
-
+import { DialogSurfaceMotion } from '../DialogSurfaceMotion';
 import type { DialogOpenChangeData, DialogProps, DialogState } from './Dialog.types';
-import { useModalAttributes } from '@fluentui/react-tabster';
 
 /**
  * Create the state required to render Dialog.
@@ -48,6 +50,8 @@ export const useDialog_unstable = (props: DialogProps): DialogState => {
   return {
     components: {
       backdrop: 'div',
+      // @ts-expect-error FIX ME BEFORE MERGE
+      surfaceMotion: DialogSurfaceMotion,
     },
     inertTrapFocus,
     open,
@@ -60,6 +64,8 @@ export const useDialog_unstable = (props: DialogProps): DialogState => {
     dialogRef: focusRef,
     modalAttributes,
     triggerAttributes,
+    // @ts-expect-error FIX ME BEFORE MERGE
+    surfaceMotion,
   };
 };
 

@@ -88,8 +88,20 @@ export const useDialogSurface_unstable = (
     };
   }, [enableBodyScroll, isNestedDialog, disableBodyScroll, modalType]);
 
+    const backdropMotion = presenceMotionSlot(props.backdropMotion, { component: DialogBackdropMotion });
+
+    backdropMotion.appear = true;
+    backdropMotion.visible = open;
+
   return {
-    components: { backdrop: 'div', root: 'div' },
+    components: {
+      backdrop: 'div',
+      root: 'div',
+      // @ts-expect-error FIX ME BEFORE MERGE
+      backdropMotion: DialogBackdropMotion,
+    },
+    // @ts-expect-error FIX ME BEFORE MERGE
+    backdropMotion,
     open,
     backdrop,
     isNestedDialog,

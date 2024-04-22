@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { SLOT_ELEMENT_TYPE_SYMBOL, SLOT_RENDER_FUNCTION_SYMBOL } from './constants';
 import { DistributiveOmit, ReplaceNullWithUndefined } from '../utils/types';
 
@@ -13,7 +14,15 @@ export type SlotRenderFunction<Props> = (
  * This should ONLY be used in type templates as in `extends SlotPropsRecord`;
  * it shouldn't be used as a component's Slots type.
  */
-export type SlotPropsRecord = Record<string, UnknownSlotProps | SlotShorthandValue | null | undefined>;
+export type SlotPropsRecord = Record<
+  string,
+  | UnknownSlotProps
+  | SlotShorthandValue
+  | null
+  | undefined
+  // TODO: this is obviously a hack
+  | { onMotionFinish?: Function }
+>;
 
 /**
  * The shorthand value of a slot allows specifying its child
