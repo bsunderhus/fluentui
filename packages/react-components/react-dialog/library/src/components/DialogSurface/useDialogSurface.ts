@@ -12,6 +12,8 @@ import * as React from 'react';
 import { useDialogContext_unstable } from '../../contexts';
 import { useDisableBodyScroll } from '../../utils/useDisableBodyScroll';
 import type { DialogSurfaceElement, DialogSurfaceProps, DialogSurfaceState } from './DialogSurface.types';
+import { PresenceMotionSlotProps, presenceMotionSlot } from '@fluentui/react-motion';
+import { DialogBackdropMotion } from '../DialogBackdropMotion';
 
 /**
  * Create the state required to render DialogSurface.
@@ -88,7 +90,7 @@ export const useDialogSurface_unstable = (
     };
   }, [enableBodyScroll, isNestedDialog, disableBodyScroll, modalType]);
 
-  const backdropMotion = presenceMotionSlot(props.backdropMotion, { component: DialogBackdropMotion });
+  const backdropMotion = presenceMotionSlot(props.backdropMotion, { elementType: DialogBackdropMotion });
 
   backdropMotion.appear = true;
   backdropMotion.visible = open;
@@ -97,8 +99,11 @@ export const useDialogSurface_unstable = (
     components: {
       backdrop: 'div',
       root: 'div',
-      // @ts-expect-error FIX ME BEFORE MERGE
-      backdropMotion: DialogBackdropMotion,
+      // TODO: remove once React v18 slot API is modified
+      // This is a problem at the moment due to UnknownSlotProps assumption
+      // that `children` property is `ReactNode`, which in this case is not valid
+      // as PresenceComponentProps['children'] is `ReactElement`
+      backdropMotion: DialogBackdropMotion as React.FC<PresenceMotionSlotProps>,
     },
     backdropMotion,
     open,

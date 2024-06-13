@@ -23,3 +23,5 @@ export const DialogSurface: ForwardRefComponent<DialogSurfaceProps> = React.forw
 });
 
 DialogSurface.displayName = 'DialogSurface';
+
+<DialogSurface backdropMotion={{ children: (c, p) => null }} />;

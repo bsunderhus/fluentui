@@ -6,8 +6,7 @@ import type { DialogContextValue, DialogSurfaceContextValue } from '../../contex
 import type { DialogSurfaceElement } from '../DialogSurface/DialogSurface.types';
 
 export type DialogSlots = {
-  // TODO: avoid React.FC
-  surfaceMotion: Slot<React.FC<PresenceMotionSlotProps>>;
+  surfaceMotion: Slot<PresenceMotionSlotProps>;
 };
 
 export type DialogOpenChangeEvent = DialogOpenChangeData['event'];

@@ -2,6 +2,7 @@ import type { PortalProps } from '@fluentui/react-portal';
 import type { ComponentProps, ComponentState, Slot } from '@fluentui/react-utilities';
 
 import { DialogContextValue, DialogSurfaceContextValue } from '../../contexts';
+import { PresenceMotionSlotProps } from '@fluentui/react-motion';
 
 export type DialogSurfaceSlots = {
   /**
@@ -14,7 +15,7 @@ export type DialogSurfaceSlots = {
   backdrop?: Slot<'div'>;
   root: Slot<'div'>;
 
-  backdropMotion: PresenceMotionSlot;
+  backdropMotion: Slot<PresenceMotionSlotProps>;
 };
 
 /**
@@ -25,7 +26,7 @@ export type DialogSurfaceElement = HTMLElement;
 /**
  * DialogSurface Props
  */
-export type DialogSurfaceProps = ComponentProps<DialogSurfaceSlots> & Pick<PortalProps, 'mountNode'>;
+export type DialogSurfaceProps = ComponentProps<Partial<DialogSurfaceSlots>> & Pick<PortalProps, 'mountNode'>;
 
 export type DialogSurfaceContextValues = {
   dialogSurface: DialogSurfaceContextValue;

@@ -14,6 +14,7 @@ import type { DialogSurfaceSlots, DialogSurfaceState } from './DialogSurface.typ
 export const dialogSurfaceClassNames: SlotClassNames<DialogSurfaceSlots> = {
   root: 'fui-DialogSurface',
   backdrop: 'fui-DialogSurface__backdrop',
+  backdropMotion: 'fui-DialogSurface__backdropMotion',
 };
 
 /**
