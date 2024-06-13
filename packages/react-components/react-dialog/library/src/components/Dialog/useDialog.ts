@@ -1,7 +1,7 @@
 import { useHasParentContext } from '@fluentui/react-context-selector';
 import { useModalAttributes } from '@fluentui/react-tabster';
 import { presenceMotionSlot } from '@fluentui/react-motion';
-import { useControllableState, useEventCallback, useId } from '@fluentui/react-utilities';
+import {isResolvedShorthand, useControllableState, useEventCallback, useId} from '@fluentui/react-utilities';
 import * as React from 'react';
 
 import { useFocusFirstElement } from '../../utils';
@@ -46,6 +46,8 @@ export const useDialog_unstable = (props: DialogProps): DialogState => {
   });
 
   const isNestedDialog = useHasParentContext(DialogContext);
+  // isResolvedShorthand((props.surfaceMotion)) && props.surfaceMotion.children
+  const surfaceMotion = presenceMotionSlot(props.surfaceMotion, { elementType: DialogSurfaceMotion });
 
   return {
     components: {

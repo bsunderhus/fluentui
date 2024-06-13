@@ -7,27 +7,36 @@ import {
 import * as React from 'react';
 
 import type { PresenceComponentProps } from './factories/createPresenceComponent';
+import type { MotionParam } from './types';
 
-export type PresenceMotionSlot = {
-  as?: React.FC<PresenceComponentProps>;
-  children?: SlotRenderFunction<PresenceComponentProps>;
-  onMotionFinish?: PresenceComponentProps['onMotionFinish'];
-};
+// TODO: fix {} type
+export type PresenceMotionSlotProps<MotionParams extends Record<string, MotionParam> = {}> = Pick<
+  PresenceComponentProps,
+  'appear' | 'imperativeRef' | 'unmountOnExit' | 'onMotionFinish' | 'onMotionStart'
+> & {
+  // TODO: fix me
+  as?: any;
+  // TODO: fix me
+  children?: any;
+} & MotionParams;
 
-export function presenceMotionSlot(
-  motion: PresenceMotionSlot | undefined,
-  options: { component: React.FC<PresenceComponentProps> },
-): SlotComponentType<PresenceComponentProps> {
+export function presenceMotionSlot<Props extends PresenceMotionSlotProps<Record<string, MotionParam>>>(
+  motion: Props | null | undefined,
+  options: { elementType: React.FC<PresenceComponentProps> },
+): SlotComponentType<Props & Pick<PresenceComponentProps, 'visible'>> {
   const { as, children, onMotionFinish } = motion || {};
 
-  const Component = typeof as === 'undefined' ? options.component : as ?? React.Fragment;
+  // TODO: handle null
+  const Component = typeof as === 'undefined' ? options.elementType : as ?? React.Fragment;
   const propsWithMetadata = {
     onMotionFinish,
     [SLOT_ELEMENT_TYPE_SYMBOL]: Component,
-  } as SlotComponentType<PresenceComponentProps>;
+  } as SlotComponentType<Props & Pick<PresenceComponentProps, 'visible'>>;
 
   if (typeof children === 'function') {
-    propsWithMetadata[SLOT_RENDER_FUNCTION_SYMBOL] = children as SlotRenderFunction<PresenceComponentProps>;
+    propsWithMetadata[SLOT_RENDER_FUNCTION_SYMBOL] = children as SlotRenderFunction<
+      Props & Pick<PresenceComponentProps, 'visible'>
+    >;
   }
 
   return propsWithMetadata;

@@ -1,12 +1,13 @@
 import type * as React from 'react';
-import type { PresenceMotionSlot } from '@fluentui/react-motions-preview';
-import type { ComponentProps, ComponentState } from '@fluentui/react-utilities';
+import type { PresenceMotionSlotProps } from '@fluentui/react-motion';
+import type { ComponentProps, ComponentState, Slot } from '@fluentui/react-utilities';
 
 import type { DialogContextValue, DialogSurfaceContextValue } from '../../contexts';
 import type { DialogSurfaceElement } from '../DialogSurface/DialogSurface.types';
 
 export type DialogSlots = {
-  surfaceMotion: PresenceMotionSlot;
+  // TODO: avoid React.FC
+  surfaceMotion: Slot<React.FC<PresenceMotionSlotProps>>;
 };
 
 export type DialogOpenChangeEvent = DialogOpenChangeData['event'];

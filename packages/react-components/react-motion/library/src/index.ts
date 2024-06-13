@@ -5,6 +5,6 @@ export { createPresenceComponent, type PresenceComponentProps } from './factorie
 
 export { PresenceGroup } from './components/PresenceGroup';
 
-export { presenceMotionSlot, type PresenceMotionSlot } from './presenceMotionSlot';
+export { presenceMotionSlot, type PresenceMotionSlotProps } from './presenceMotionSlot';
 
 export type { AtomMotion, AtomMotionFn, PresenceMotion, PresenceMotionFn, MotionImperativeRef } from './types';

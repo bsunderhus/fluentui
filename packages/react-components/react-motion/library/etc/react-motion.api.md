@@ -5,6 +5,7 @@
 ```ts
 
 import * as React_2 from 'react';
+import { SlotComponentType } from '@fluentui/react-utilities';
 
 // @public (undocumented)
 export type AtomMotion = {
@@ -123,6 +124,17 @@ export type PresenceMotion = {
 export type PresenceMotionFn<MotionParams extends Record<string, MotionParam> = {}> = (params: {
     element: HTMLElement;
 } & MotionParams) => PresenceMotion;
+
+// @public (undocumented)
+export function presenceMotionSlot<Props extends PresenceMotionSlotProps<Record<string, MotionParam>>>(motion: Props | undefined, options: {
+    elementType: React_2.FC<PresenceComponentProps>;
+}): SlotComponentType<Props & Pick<PresenceComponentProps, 'visible'>>;
+
+// @public (undocumented)
+export type PresenceMotionSlotProps<MotionParams extends Record<string, MotionParam> = {}> = Pick<PresenceComponentProps, 'appear' | 'imperativeRef' | 'unmountOnExit' | 'onMotionFinish' | 'onMotionStart'> & {
+    as?: any;
+    children?: any;
+} & MotionParams;
 
 // (No @packageDocumentation comment for this package)
 
