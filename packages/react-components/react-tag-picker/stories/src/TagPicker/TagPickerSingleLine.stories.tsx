@@ -12,10 +12,12 @@ import {
   useOverflowCount,
   TagPickerInputProps,
   useTagPickerContext_unstable,
-  useEventCallback,
-  InteractionTagPrimary,
+  TagProps,
+  Tag,
+  Avatar,
+  Overflow,
+  OverflowItem,
 } from '@fluentui/react-components';
-import { Tag, Avatar, Overflow, OverflowItem } from '@fluentui/react-components';
 import { ChevronDownRegular, ChevronUpRegular } from '@fluentui/react-icons';
 
 const useStyles = makeStyles({
@@ -55,55 +57,57 @@ type ExpandIconProps = { open: boolean; focus: boolean };
 const ExpandIcon = (props: ExpandIconProps) => {
   const overflowCount = useOverflowCount();
 
-  const styles = useStyles();
   if (props.open) {
     return <ChevronUpRegular />;
   }
   if (overflowCount === 0 || props.focus) {
     return <ChevronDownRegular />;
   }
+  return null;
+};
+
+const OverFlowCountTag = (props: TagProps) => {
+  const overflowCount = useOverflowCount();
+  const styles = useStyles();
+  if (overflowCount === 0) {
+    return null;
+  }
   return (
-    <InteractionTagPrimary tabIndex={-1} className={styles.countButton}>
+    <Tag
+      as="span"
+      role={undefined}
+      dismissible={false}
+      aria-hidden
+      tabIndex={-1}
+      {...props}
+      className={styles.countButton}
+    >
       +{overflowCount}
-    </InteractionTagPrimary>
+    </Tag>
   );
 };
 
 type CustomTagPickerInputProps = TagPickerInputProps & { focus: boolean };
 
-const CustomTagPickerInput = ({ focus, onMouseDown, placeholder, ...rest }: CustomTagPickerInputProps) => {
-  const overflowCount = useOverflowCount();
-  const selectedOptionsAmount = useTagPickerContext_unstable(ctx => ctx.selectedOptions.length);
-  const handleMouseDown = useEventCallback((event: React.MouseEvent<HTMLInputElement>) => {
-    onMouseDown?.(event);
-    if (event.isDefaultPrevented()) {
-      return;
-    }
-    if (overflowCount > 0 && focus) {
-      return;
-    }
-    /**
-     * usually a click event would be enough to open the tag picker,
-     * but in this case we're changing the position of the input on focus,
-     * and due to that position shift a click event will not be emitted
-     * (to a click event to occur you need the mouse to be positioned on the element on mouse down and mouse up, which is not the case here as the element shifts on focus).
-     * We have to emit a click event on our own.
-     */
-    event.currentTarget.click();
-  });
-  return (
-    <TagPickerInput
-      {...rest}
-      onMouseDown={overflowCount > 0 ? handleMouseDown : undefined}
-      placeholder={selectedOptionsAmount === 0 || (overflowCount > 0 && focus) ? placeholder : undefined}
-    />
-  );
-};
+const CustomTagPickerInput = React.forwardRef<HTMLInputElement, CustomTagPickerInputProps>(
+  ({ focus, onMouseDown, placeholder, ...rest }, ref) => {
+    const overflowCount = useOverflowCount();
+    const selectedOptionsAmount = useTagPickerContext_unstable(ctx => ctx.selectedOptions.length);
+    return (
+      <TagPickerInput
+        ref={ref}
+        {...rest}
+        placeholder={selectedOptionsAmount === 0 || (overflowCount > 0 && focus) ? placeholder : undefined}
+      />
+    );
+  },
+);
 
 export const SingleLine = () => {
   const styles = useStyles();
   const [open, setOpen] = React.useState(false);
   const [selectedOptions, setSelectedOptions] = React.useState<string[]>([]);
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const onOptionSelect: TagPickerProps['onOptionSelect'] = (e, data) => {
     setSelectedOptions(data.selectedOptions);
   };
@@ -122,6 +126,11 @@ export const SingleLine = () => {
       return;
     }
     setFocus(false);
+  };
+
+  const handleOverflowCountTagMouseDown = (event: React.MouseEvent) => {
+    event.preventDefault();
+    inputRef.current?.focus();
   };
 
   return (
@@ -161,8 +170,14 @@ export const SingleLine = () => {
                 </Tag>
               </OverflowItem>
             ))}
+            {!open && !hasFocus ? <OverFlowCountTag onMouseDown={handleOverflowCountTagMouseDown} /> : null}
           </TagPickerGroup>
-          <CustomTagPickerInput focus={hasFocus} placeholder="Select Employees" aria-label="Select Employees" />
+          <CustomTagPickerInput
+            ref={inputRef}
+            focus={hasFocus}
+            placeholder="Select Employees"
+            aria-label="Select Employees"
+          />
         </TagPickerControl>
       </Overflow>
       <TagPickerList>
