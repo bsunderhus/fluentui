@@ -84,6 +84,8 @@ export type TagPickerButtonState = ComponentState<TagPickerButtonSlots> & Pick<T
 // @public (undocumented)
 export interface TagPickerContextValue extends Pick<ComboboxBaseState, 'open' | 'clearSelection' | 'getOptionById' | 'selectedOptions' | 'selectOption' | 'setHasFocus' | 'setOpen' | 'setValue' | 'value' | 'appearance' | 'disabled'> {
     // (undocumented)
+    noPopover?: boolean;
+    // (undocumented)
     popoverId: string;
     // (undocumented)
     popoverRef: React_2.RefObject<HTMLDivElement>;
