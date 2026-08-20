@@ -70,7 +70,7 @@ jobs:
         if: ${{ github.event.pull_request.base.ref == 'master' }}
         run: echo ${{ github.event.number }} > pr.txt
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: ${{ github.event.pull_request.base.ref == 'master' }}
         with:
           name: monosize-report

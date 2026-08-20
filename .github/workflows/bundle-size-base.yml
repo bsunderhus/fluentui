@@ -58,7 +58,7 @@ jobs:
             run({ core });
 
       - name: Upload report artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ steps.report.outputs.name }}
           if-no-files-found: error
