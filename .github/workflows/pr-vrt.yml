@@ -60,7 +60,7 @@ jobs:
           result-encoding: string
 
       - name: Upload VR screenshots
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: vrscreenshot
           retention-days: 1
@@ -69,7 +69,7 @@ jobs:
       - name: Save PR number
         run: echo ${{ github.event.number }} > pr.txt
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: pr-number
           retention-days: 1
